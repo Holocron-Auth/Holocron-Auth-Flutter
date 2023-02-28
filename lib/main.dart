@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -23,7 +24,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-
   final String title;
 
   @override
@@ -31,32 +31,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      //add hex code background color
+      backgroundColor: Color(0xff211D1D),
+      // backgroundColor: Colors.black,
+      body: Container(
+        // color: Colors.black,
 
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-          //add a title to the app
-            const Text(
-              'Holocron Auth',
-              style: TextStyle(
-                fontSize: 60,
-                fontWeight: FontWeight.bold,
-              )
+            //add a title to the app
+            Container(
+              padding: const EdgeInsets.only(left: 15),
+              child: Text('Holocron Auth',
+                  style: TextStyle(
+                    color: Color(0xFFFFB267),
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold,
+                  )),
             ),
-            const Text(
-              'Coming Soon!!...',style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.normal,
-              )
-            ),
-
+            Container(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text('Coming Soon!!...',
+                  style: TextStyle(
+                    color: Color(0xFFFFB267),
+                    fontSize: 30,
+                    fontWeight: FontWeight.normal,
+                  )),
+            )
           ],
         ),
       ),
