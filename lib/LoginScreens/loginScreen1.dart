@@ -31,7 +31,8 @@ class LoginScreen1 extends State<LoginScreenState> {
               margin: EdgeInsets.only(top: 0.07 * height),
 
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(15.0),
+                  border: Border.all(width: 1, color: Colors.orange),
                   color: Colors.black),
               child: TextFormField(
                 //required
@@ -45,10 +46,11 @@ class LoginScreen1 extends State<LoginScreenState> {
 
                 controller: _controller,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1, color: Colors.orange),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
+                  // border: OutlineInputBorder(
+                  //   borderSide: BorderSide(width: 1, color: Colors.orange),
+                  //   borderRadius: BorderRadius.circular(15.0),
+                  // ),
+                  border: InputBorder.none,
                   hintText: 'Mobile Number',
                   labelText: 'Mobile Number',
                   hintStyle: TextStyle(
@@ -56,7 +58,7 @@ class LoginScreen1 extends State<LoginScreenState> {
                       fontSize: 17,
                       fontWeight: FontWeight.w500),
                   contentPadding:
-                      EdgeInsets.only(left: 0.05 * width, top: 0.015 * height),
+                      EdgeInsets.only(left: 0.05 * width,),
                 ),
               ),
             ),

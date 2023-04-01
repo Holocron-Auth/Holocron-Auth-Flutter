@@ -92,26 +92,31 @@ class LoginScreen2 extends State<LoginScreenState2> {
             ),
 
             Container(
+              decoration: BoxDecoration(
+                  //outline border
+                  border: Border.all(color: Colors.orange, width: 1),
+                  borderRadius: BorderRadius.circular(15.0),
+                  ),
+              margin: EdgeInsets.only(top: 0.03 * height),
+              width: 0.8 * width,
+              height: 0.055 * height,
               child: TextField(
                 controller: _controller2,
                 // hintText: 'Mobile Number',
                 // labelText: 'Mobile Number',
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1, color: Colors.orange),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
+                  border: InputBorder.none,
                   hintStyle: TextStyle(
                       color: Color(0xffFFB267),
                       fontSize: 17,
                       fontWeight: FontWeight.w500),
                   contentPadding:
-                  EdgeInsets.only(left: 0.05 * width, top: 0.015 * height),
+                  EdgeInsets.only(left: 0.05 * width),
                 ),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 0.05 * height, right: 0.59 * width),
+              margin: EdgeInsets.only(top: 0.02 * height, right: 0.59 * width),
               child: Text(
                 "ENTER OTP",
                 style: TextStyle(
