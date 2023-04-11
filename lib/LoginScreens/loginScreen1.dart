@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../LoginScreens/loginScreen2.dart';
-
+import '../SignUpScreens/signUpScreen1.dart';
 class LoginScreenState extends StatefulWidget {
   @override
   LoginScreen1 createState() => LoginScreen1();
@@ -79,6 +79,7 @@ class LoginScreen1 extends State<LoginScreenState> {
                   onPressed: () {
                     // Do something when the button is pressed
                     String mobileNumber = _controller.text;
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -119,6 +120,10 @@ class LoginScreen1 extends State<LoginScreenState> {
                     child: TextButton(
                   onPressed: () {
                     // Do something when the button is pressed
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => signUpScreen1()),
+                    );
                   },
                   child: Text('Sign Up!',
                       textAlign: TextAlign.center,

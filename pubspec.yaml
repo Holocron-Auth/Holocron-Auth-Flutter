@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   model_viewer_plus: ^1.5.0
   pin_code_text_field: ^1.8.0
+  local_auth: ^2.1.6
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +75,8 @@ flutter:
     - assets/starterbutton1.png
     - assets/starterbutton2.png
     - assets/starterbutton3.png
+    - assets/Logo (1).png
+    - assets/Logo (2).png
 
   # An9 image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

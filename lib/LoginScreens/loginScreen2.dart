@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'dart:async';
+import '../SignUpScreens/signUpScreen1.dart';
 
 class LoginScreenState2 extends StatefulWidget {
   final String mobileNumber;
@@ -88,7 +89,7 @@ class LoginScreen2 extends State<LoginScreenState2> {
           children: [
             Container(
               margin: EdgeInsets.only(top: 0.25 * height),
-              child: Image.asset('assets/Logo.png'),
+              child: Image.asset('assets/Logo (1).png'),
             ),
 
             Container(
@@ -313,6 +314,10 @@ class LoginScreen2 extends State<LoginScreenState2> {
                     child: TextButton(
                   onPressed: () {
                     // Do something when the button is pressed
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => signUpScreen1()),
+                    );
                   },
                   child: Text('Sign Up!',
                       textAlign: TextAlign.center,

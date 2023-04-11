@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //import the login screen 1
 import '../LoginScreens/loginScreen1.dart';
+import '../SignUpScreens/signUpScreen1.dart';
 class StarterScreen4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -101,6 +102,10 @@ class StarterScreen4 extends StatelessWidget {
                     child:ElevatedButton(
 
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => signUpScreen1()),
+                        );
                         // Do something when the button is pressed
                       },
                       child: Text('Sign Up', style: TextStyle(color:Colors.white, fontSize: 17, fontWeight: FontWeight.w400),),
