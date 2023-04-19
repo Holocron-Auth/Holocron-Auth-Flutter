@@ -7,6 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'dart:async';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
+//TASK ACTIONS
+//dropdowns and photo uploading left with the logic of completing the gauge and passing name and password from the signup screen1
+
 int _currentProgress = 20;
 final _formKey2 = GlobalKey<FormState>();
 final _formKey3 = GlobalKey<FormState>();
@@ -14,6 +17,8 @@ final _formKey4 = GlobalKey<FormState>();
 final _formKey5 = GlobalKey<FormState>();
 final _formKey6 = GlobalKey<FormState>();
 final _formKey7 = GlobalKey<FormState>();
+final _formKey8 = GlobalKey<FormState>();
+
 
 class profileScreen1 extends StatefulWidget {
   final String name;
@@ -37,6 +42,7 @@ class profileScreen1State extends State<profileScreen1> {
   late TextEditingController _controller4;
   late TextEditingController _controller5;
   late TextEditingController _controller6;
+  late TextEditingController _controller7;
   late FocusNode _focusNode;
   late FocusNode _focusNode2;
   late FocusNode _focusNode3;
@@ -124,6 +130,7 @@ class profileScreen1State extends State<profileScreen1> {
     _controller4.dispose();
     _controller5.dispose();
     _controller6.dispose();
+    _controller7.dispose();
     _focusNode.dispose();
     _focusNode2.dispose();
     _focusNode3.dispose();
@@ -184,6 +191,7 @@ class profileScreen1State extends State<profileScreen1> {
     _controller4 = TextEditingController();
     _controller5 = TextEditingController();
     _controller6 = TextEditingController();
+    _controller7 = TextEditingController();
     _focusNode = FocusNode();
     _focusNode2 = FocusNode();
     _focusNode3 = FocusNode();
@@ -342,7 +350,7 @@ class profileScreen1State extends State<profileScreen1> {
                       trailing: Icon(Icons.arrow_forward_rounded),
                       iconColor: Colors.white,
                       collapsedIconColor: Colors.white,
-                      collapsedBackgroundColor: Color(0xff535252),
+                      collapsedBackgroundColor: Color(0xff2B2B2B),
                       tilePadding:
                           EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       // backgroundColor: Color(0xff535252),
@@ -1006,7 +1014,7 @@ class profileScreen1State extends State<profileScreen1> {
                         trailing: Icon(Icons.arrow_forward_rounded),
                         iconColor: Colors.white,
                         collapsedIconColor: Colors.white,
-                        collapsedBackgroundColor: Color(0xff535252),
+                        collapsedBackgroundColor: Color(0xff2B2B2B),
                         tilePadding: EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 8.0),
                         // backgroundColor: Color(0xff535252),
@@ -1020,17 +1028,366 @@ class profileScreen1State extends State<profileScreen1> {
                         // borderSide: BorderSide(color: Colors.white),
 
                         children: [
-                            // Container(
-                            //
-                            // )
+                          Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xff2B2B2B),
+                                border: Border.all(
+                                  // color: isExpanded ?Colors.orange : Colors.transparent,
+                                  color: Colors.orange,
+                                  width: 1.0,
+                                ),
+                                //border radius to appear only when expanded
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              margin: EdgeInsets.only(
+                                  top: 0.02 * height,
+                                  right: 0.03 * width,
+                                  left: 0.03 * width),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Form(
+                                      key: _formKey5,
+                                      child: TextFormField(
+                                        controller: _controller4,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          errorStyle:
+                                              TextStyle(color: Colors.orange),
+                                          hintText: 'Address',
+                                          hintStyle:
+                                              TextStyle(color: Colors.orange),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xff2B2B2B),
+                                border: Border.all(
+                                  // color: isExpanded ?Colors.orange : Colors.transparent,
+                                  color: Colors.orange,
+                                  width: 1.0,
+                                ),
+                                //border radius to appear only when expanded
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              margin: EdgeInsets.only(
+                                  top: 0.02 * height,
+                                  right: 0.03 * width,
+                                  left: 0.03 * width),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Form(
+                                      key: _formKey6,
+                                      child: TextFormField(
+                                        controller: _controller5,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          focusedErrorBorder:
+                                          OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          errorStyle:
+                                          TextStyle(color: Colors.orange),
+                                          hintText: 'Pincode',
+                                          hintStyle:
+                                          TextStyle(color: Colors.orange),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xff2B2B2B),
+                                border: Border.all(
+                                  // color: isExpanded ?Colors.orange : Colors.transparent,
+                                  color: Colors.orange,
+                                  width: 1.0,
+                                ),
+                                //border radius to appear only when expanded
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              margin: EdgeInsets.only(
+                                  top: 0.02 * height,
+                                  right: 0.03 * width,
+                                  left: 0.03 * width),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Form(
+                                      key: _formKey7,
+                                      child: TextFormField(
+                                        controller: _controller6,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          focusedErrorBorder:
+                                          OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          errorStyle:
+                                          TextStyle(color: Colors.orange),
+                                          hintText: 'Country',
+                                          hintStyle:
+                                          TextStyle(color: Colors.orange),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          Container(
+                              width: 0.87 * width,
+                              height: 0.075 * height,
+                              margin: EdgeInsets.only(
+                                  top: 0.02 * height, bottom: 0.02 * height),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  gradient: const LinearGradient(
+                                    colors: [Colors.orange, Colors.deepOrange],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    stops: [0.1, 0.9],
+                                    tileMode: TileMode.repeated,
+                                  )),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // if (_formKey2.currentState!.validate() &&
+                                  //     _formKey3.currentState!.validate() &&
+                                  //     _formKey4.currentState!.validate()) {
+                                  //   ScaffoldMessenger.of(context).showSnackBar(
+                                  //       SnackBar(
+                                  //           content: Text('Processing Data')));
+                                  //   _toggleExpansion();
+                                  //   setState(() {
+                                  //     _currentProgress += 13;
+                                  //     // print(isExpanded);
+                                  //     // isExpanded = !isExpanded;
+                                  //     // print(isExpanded);
+                                  //   });
+                                  // }
+                                },
+                                child: Text(
+                                  'Save and Proceed',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.transparent,
+
+                                  shadowColor: Colors.transparent,
+                                  // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
+
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              )),
                         ],
                       )),
                 ),
                 Container(
-                    width: 0.95 * width,
+                  margin: EdgeInsets.only(
+                      left: 0.03 * width,
+                      right: 0.03 * width,
+                      top: 0.01 * height,
+                      bottom: 0.01 * height),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      // color: isExpanded ?Colors.orange : Colors.transparent,
+                      color: Colors.orange,
+                      width: 1.0,
+                    ),
+                    //border radius to appear only when expanded
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      // margin: EdgeInsets.only(top: 0.04 * height, left:0.025*width, right: 0.025*width),
+                      child: customExpansionTile(
+                        // borderColor: Colors.transparent,
+                        onExpansionChanged: (bool expanded) {
+                          isExpanded = expanded;
+                          print(isExpanded);
+                          borderColor =
+                          isExpanded ? Colors.orange : Colors.transparent;
+                        },
+                        initiallyExpanded: isExpanded,
+                        // backgroundColor: Color(0xff535252),
+                        backgroundColor: Colors.black,
+                        leading: null,
+                        trailing: Icon(Icons.arrow_forward_rounded),
+                        iconColor: Colors.white,
+                        collapsedIconColor: Colors.white,
+                        collapsedBackgroundColor: Color(0xff2B2B2B),
+                        tilePadding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        // backgroundColor: Color(0xff535252),
+                        title: Container(
+                          // color: _isExpanded ? Colors.blue : null,
+                          child: Text(
+                            "Other Information",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        // borderSide: BorderSide(color: Colors.white),
+
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xff2B2B2B),
+                                border: Border.all(
+                                  // color: isExpanded ?Colors.orange : Colors.transparent,
+                                  color: Colors.orange,
+                                  width: 1.0,
+                                ),
+                                //border radius to appear only when expanded
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              margin: EdgeInsets.only(
+                                  top: 0.02 * height,
+                                  right: 0.03 * width,
+                                  left: 0.03 * width),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Form(
+                                      key: _formKey8,
+                                      child: TextFormField(
+                                        controller: _controller7,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          focusedErrorBorder:
+                                          OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(10),
+                                          ),
+                                          errorStyle:
+                                          TextStyle(color: Colors.orange),
+                                          hintText: 'College Name',
+                                          hintStyle:
+                                          TextStyle(color: Colors.orange),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          Container(
+                              width: 0.87 * width,
+                              height: 0.075 * height,
+                              margin: EdgeInsets.only(
+                                  top: 0.02 * height, bottom: 0.02 * height),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  gradient: const LinearGradient(
+                                    colors: [Colors.orange, Colors.deepOrange],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    stops: [0.1, 0.9],
+                                    tileMode: TileMode.repeated,
+                                  )),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // if (_formKey2.currentState!.validate() &&
+                                  //     _formKey3.currentState!.validate() &&
+                                  //     _formKey4.currentState!.validate()) {
+                                  //   ScaffoldMessenger.of(context).showSnackBar(
+                                  //       SnackBar(
+                                  //           content: Text('Processing Data')));
+                                  //   _toggleExpansion();
+                                  //   setState(() {
+                                  //     _currentProgress += 13;
+                                  //     // print(isExpanded);
+                                  //     // isExpanded = !isExpanded;
+                                  //     // print(isExpanded);
+                                  //   });
+                                  // }
+                                },
+                                child: Text(
+                                  'Save and Proceed',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.transparent,
+
+                                  shadowColor: Colors.transparent,
+                                  // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
+
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              )),
+                        ],
+                      )),
+                ),
+                Container(
+                    width: 0.94 * width,
                     height: 0.075 * height,
                     // color: Color(0xff535252),
-                    margin: EdgeInsets.only(top: 0.04 * height),
+                    margin: EdgeInsets.only(top: 0.01 * height),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16.0),
                       color: Color(0xff535252),
@@ -1054,7 +1411,7 @@ class profileScreen1State extends State<profileScreen1> {
                                 fontWeight: FontWeight.w500),
                           ),
                           Container(
-                              margin: EdgeInsets.only(left: 0.63 * width),
+                              margin: EdgeInsets.only(left: 0.62 * width),
                               child: Icon(
                                 Icons.arrow_forward_rounded,
                                 color: Colors.white,
