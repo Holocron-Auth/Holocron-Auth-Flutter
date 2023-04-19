@@ -39,6 +39,8 @@ dependencies:
   model_viewer_plus: ^1.5.0
   pin_code_text_field: ^1.8.0
   local_auth: ^2.1.6
+  syncfusion_flutter_gauges: ^21.1.39
+  syncfusion_flutter_datepicker: ^21.1.41
 
 dev_dependencies:
   flutter_test:
