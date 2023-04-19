@@ -76,13 +76,14 @@ class signUpScreen3 extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     String initialValue = 'Ritvik Pendyala';
-
+                    String number = "9502546860";
                     // Do something when the button is pressed
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => profileScreen1(
-                              initialValue: initialValue,
+                              name: initialValue,
+                              number: number,
                               onSave: (value) {
                                 print(value);
                               })),

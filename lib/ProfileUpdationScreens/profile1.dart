@@ -4,21 +4,26 @@ import 'package:holocron_auth_flutter/custom_expansion_tile.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../ProfileUpdationScreens/profile2.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:async';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 int _currentProgress = 20;
 final _formKey2 = GlobalKey<FormState>();
 final _formKey3 = GlobalKey<FormState>();
 final _formKey4 = GlobalKey<FormState>();
+final _formKey5 = GlobalKey<FormState>();
+final _formKey6 = GlobalKey<FormState>();
+final _formKey7 = GlobalKey<FormState>();
 
 class profileScreen1 extends StatefulWidget {
-  final String initialValue;
-  // final String finalValue;
+  final String name;
+  final String number;
   final void Function(String) onSave;
 
   const profileScreen1({
     Key? key,
-    required this.initialValue,
-    // required this.finalValue,
+    required this.name,
+    required this.number,
     required this.onSave,
   }) : super(key: key);
   @override
@@ -29,6 +34,9 @@ class profileScreen1State extends State<profileScreen1> {
   late TextEditingController _controller;
   late TextEditingController _controller2;
   late TextEditingController _controller3;
+  late TextEditingController _controller4;
+  late TextEditingController _controller5;
+  late TextEditingController _controller6;
   late FocusNode _focusNode;
   late FocusNode _focusNode2;
   late FocusNode _focusNode3;
@@ -36,6 +44,44 @@ class profileScreen1State extends State<profileScreen1> {
   bool _isEditing2 = false;
   bool _isEditing3 = false;
   bool isExpanded = false;
+  bool isExpanded2 = false;
+  TextEditingController _otpcontroller1 = TextEditingController(text: '');
+  late TextEditingController _otpcontroller2;
+  String _otpCode = '';
+  late String mobileNumber;
+  bool hasError = false;
+  String errorMessage = "";
+  int _timerCountdown = 60;
+  bool _isTimerRunning = false;
+  Timer? _resendOtpTimer;
+  bool isChecked = false;
+
+  void _startResendOtpTimer() {
+    setState(() {
+      _isTimerRunning = true;
+    });
+
+    _resendOtpTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timerCountdown > 0) {
+        setState(() {
+          _timerCountdown--;
+        });
+      } else {
+        setState(() {
+          _isTimerRunning = false;
+        });
+        _resendOtpTimer?.cancel();
+      }
+    });
+  }
+
+  void _resetResendOtpTimer() {
+    setState(() {
+      _timerCountdown = 60;
+      _isTimerRunning = false;
+    });
+    _resendOtpTimer?.cancel();
+  }
 
   void _toggleExpansion() {
     setState(() {
@@ -75,9 +121,13 @@ class profileScreen1State extends State<profileScreen1> {
     _controller.dispose();
     _controller2.dispose();
     _controller3.dispose();
+    _controller4.dispose();
+    _controller5.dispose();
+    _controller6.dispose();
     _focusNode.dispose();
     _focusNode2.dispose();
     _focusNode3.dispose();
+    _resendOtpTimer?.cancel();
     super.dispose();
   }
 
@@ -128,9 +178,12 @@ class profileScreen1State extends State<profileScreen1> {
 
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.initialValue);
-    _controller2 = TextEditingController(text: widget.initialValue);
-    _controller3 = TextEditingController(text: widget.initialValue);
+    _controller = TextEditingController(text: widget.name);
+    _controller2 = TextEditingController(text: widget.number);
+    _controller3 = TextEditingController();
+    _controller4 = TextEditingController();
+    _controller5 = TextEditingController();
+    _controller6 = TextEditingController();
     _focusNode = FocusNode();
     _focusNode2 = FocusNode();
     _focusNode3 = FocusNode();
@@ -254,134 +307,8 @@ class profileScreen1State extends State<profileScreen1> {
                     )
                   ],
                 ),
-                Container(
-                    width: 0.95 * width,
-                    margin: EdgeInsets.only(top: 0.04 * height),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.0),
-                    ),
-                    child: ExpansionTile(
-                      trailing: Icon(Icons.arrow_forward_rounded),
-                      // collapsedBackgroundColor: Color(0xff535252),
-                      tilePadding:
-                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      collapsedBackgroundColor: Color(0xff2b2b2b),
-                      backgroundColor: Color(0xff535252),
-                      collapsedIconColor: Colors.white,
-                      iconColor: Colors.white,
-                      //define a border radius for this tile
 
-                      children: [
-                        Container(
-                            width: 0.8 * width,
-                            height: 0.075 * height,
-                            margin: EdgeInsets.only(
-                                top: 0.07 * height, bottom: 0.02 * height),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.0),
-                                gradient: const LinearGradient(
-                                  colors: [Colors.orange, Colors.deepOrange],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  stops: [0.1, 0.9],
-                                  tileMode: TileMode.repeated,
-                                )),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Do something when the button is pressed
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => LoginScreenState()),
-                                // );
-                              },
-                              child: Text(
-                                'Save and Proceed',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.transparent,
-
-                                shadowColor: Colors.transparent,
-                                // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
-
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            )),
-                      ],
-                      title: const Text(
-                        "Essential Information",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )),
-                Container(
-                    width: 0.95 * width,
-                    margin: EdgeInsets.only(top: 0.04 * height),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.0),
-                    ),
-                    child: ExpansionTile(
-                      trailing: Icon(Icons.arrow_forward_rounded),
-                      // collapsedBackgroundColor: Color(0xff535252),
-                      tilePadding:
-                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      collapsedBackgroundColor: Color(0xff2b2b2b),
-                      backgroundColor: Color(0xff535252),
-                      collapsedIconColor: Colors.white,
-                      iconColor: Colors.white,
-                      //define a border radius for this tile
-
-                      children: [
-                        Container(
-                            width: 0.8 * width,
-                            height: 0.075 * height,
-                            margin: EdgeInsets.only(
-                                top: 0.07 * height, bottom: 0.02 * height),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.0),
-                                gradient: const LinearGradient(
-                                  colors: [Colors.orange, Colors.deepOrange],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  stops: [0.1, 0.9],
-                                  tileMode: TileMode.repeated,
-                                )),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Do something when the button is pressed
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(builder: (context) => LoginScreenState()),
-                                // );
-                              },
-                              child: Text(
-                                'Save',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.transparent,
-
-                                shadowColor: Colors.transparent,
-                                // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
-
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            )),
-                      ],
-                      title: const Text(
-                        "Other Details*",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )),
+                // Primary Information* part verification logic pending as well as requests to be sent to backend
                 Container(
                   margin: EdgeInsets.only(
                       left: 0.03 * width,
@@ -605,8 +532,8 @@ class profileScreen1State extends State<profileScreen1> {
                                     key: _formKey4,
                                     child: TextFormField(
                                       controller: _controller3,
-                                      focusNode: _focusNode3,
-                                      enabled: _isEditing3,
+                                      // focusNode: _focusNode3,
+                                      // enabled: _isEditing3,
                                       decoration: InputDecoration(
                                         // filled: true,
                                         // fillColor: Color(0xff2B2B2B),
@@ -654,14 +581,302 @@ class profileScreen1State extends State<profileScreen1> {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: () {
-                                    showDialog(context: context, builder: builder);
-                                    _toggleEditMode3;
-                                  },
-                                  icon: _isEditing3
-                                      ? Icon(Icons.done, color: Colors.orange)
-                                      : Icon(Icons.edit, color: Colors.orange),
-                                ),
+                                    onPressed: () {
+                                      // _toggleEditMode3;
+                                      //validate the formkey
+                                      if (_formKey4.currentState!.validate()) {
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) => Container(
+                                                height: 0.25 * height,
+                                                width: 0.3 * width,
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xff2B2B2B),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0),
+                                                ),
+                                                margin: EdgeInsets.only(
+                                                    top: 0.3 * height,
+                                                    bottom: 0.3 * height,
+                                                    left: 0.1 * width,
+                                                    right: 0.1 * width),
+                                                child: Column(children: [
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 0.04 * height),
+                                                    child: Text(
+                                                        '${_controller3.text}',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.orange,
+                                                            fontSize: 20)),
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 0.02 * height,
+                                                        right: 0.335 * width,
+                                                        left: 0.02 * width),
+                                                    child: Text(
+                                                        'OTP sent to your email ID successfully',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.orange,
+                                                            fontSize: 12)),
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 0.02 * height,
+                                                        right: 0.55 * width,
+                                                        left: 0.02 * width),
+                                                    child: Text('ENTER OTP',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.orange,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                  ),
+                                                  Card(
+                                                    color: Color(0xff2B2B2B),
+                                                    margin: EdgeInsets.only(
+                                                        top: 0.04 * height),
+                                                    child: PinCodeTextField(
+                                                      autofocus: true,
+                                                      controller:
+                                                          _otpcontroller1,
+                                                      // hideCharacter: true,
+                                                      highlight: true,
+                                                      highlightColor:
+                                                          Colors.orange,
+                                                      defaultBorderColor:
+                                                          Colors.white,
+                                                      hasTextBorderColor:
+                                                          Colors.white,
+                                                      highlightPinBoxColor:
+                                                          Colors.black,
+                                                      // highlightPinBoxColor: Color(0xff2B2B2B),
+                                                      maxLength: 6,
+                                                      onTextChanged: (text) {
+                                                        setState(() {
+                                                          hasError = false;
+                                                        });
+                                                      },
+                                                      onDone: (text) {
+                                                        print("DONE $text");
+                                                      },
+
+                                                      pinBoxWidth: 40,
+
+                                                      pinBoxHeight: 50,
+                                                      pinBoxRadius: 5,
+                                                      pinBoxBorderWidth: 2,
+                                                      hasUnderline: true,
+                                                      wrapAlignment:
+                                                          WrapAlignment
+                                                              .spaceAround,
+                                                      //underline color
+
+                                                      pinBoxColor:
+                                                          Color(0xff2B2B2B),
+                                                      pinTextStyle: TextStyle(
+                                                          fontSize: 20.0,
+                                                          color: Colors.white),
+                                                      hasError: hasError,
+                                                      // cursorColor: Colors.black,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      // appContext: context,
+                                                    ),
+                                                  ),
+                                                  Visibility(
+                                                    child: Text(
+                                                      "Wrong PIN!",
+                                                    ),
+                                                    visible: hasError,
+                                                  ),
+                                                  Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 0.45 * width),
+                                                      child: TextButton(
+                                                        onPressed: () {
+                                                          // Do something when the button is pressed
+                                                        },
+                                                        child: Text(
+                                                            'Resend OTP($_timerCountdown s)',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.orange,
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                            )),
+                                                      )),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                            width: 0.37 * width,
+                                                            height: 0.075 *
+                                                                height,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    top: 0.03 *
+                                                                        height,
+                                                                    bottom: 0.01 *
+                                                                        height,
+                                                                    left: 0.02 *
+                                                                        width),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16.0),
+                                                                    gradient:
+                                                                        const LinearGradient(
+                                                                      colors: [
+                                                                        Colors
+                                                                            .orange,
+                                                                        Colors
+                                                                            .deepOrange
+                                                                      ],
+                                                                      begin: Alignment
+                                                                          .topCenter,
+                                                                      end: Alignment
+                                                                          .bottomCenter,
+                                                                      stops: [
+                                                                        0.1,
+                                                                        0.9
+                                                                      ],
+                                                                      tileMode:
+                                                                          TileMode
+                                                                              .repeated,
+                                                                    )),
+                                                            child:
+                                                                ElevatedButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: Text(
+                                                                'Cancel',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        17,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                primary: Colors
+                                                                    .transparent,
+
+                                                                shadowColor: Colors
+                                                                    .transparent,
+                                                                // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
+
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                ),
+                                                              ),
+                                                            )),
+                                                        Container(
+                                                            width: 0.37 * width,
+                                                            height:
+                                                                0.075 * height,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    top: 0.03 *
+                                                                        height,
+                                                                    bottom: 0.01 *
+                                                                        height,
+                                                                    right: 0.02 *
+                                                                        width),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16.0),
+                                                                    gradient:
+                                                                        const LinearGradient(
+                                                                      colors: [
+                                                                        Colors
+                                                                            .orange,
+                                                                        Colors
+                                                                            .deepOrange
+                                                                      ],
+                                                                      begin: Alignment
+                                                                          .topCenter,
+                                                                      end: Alignment
+                                                                          .bottomCenter,
+                                                                      stops: [
+                                                                        0.1,
+                                                                        0.9
+                                                                      ],
+                                                                      tileMode:
+                                                                          TileMode
+                                                                              .repeated,
+                                                                    )),
+                                                            child:
+                                                                ElevatedButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                //  OTP Verification Logic
+                                                              },
+                                                              child: Text(
+                                                                'Verify',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        17,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                primary: Colors
+                                                                    .transparent,
+
+                                                                shadowColor: Colors
+                                                                    .transparent,
+                                                                // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
+
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                ),
+                                                              ),
+                                                            )),
+                                                      ]),
+                                                ])));
+                                      }
+                                    },
+                                    icon:
+                                        Icon(Icons.done, color: Colors.orange)),
                               ],
                             )),
                         Container(
@@ -757,6 +972,60 @@ class profileScreen1State extends State<profileScreen1> {
                     ),
                   ),
                 ),
+                // ESSENTIAL Information* part verification logic pending as well as requests to be sent to backend
+                Container(
+                  margin: EdgeInsets.only(
+                      left: 0.03 * width,
+                      right: 0.03 * width,
+                      top: 0.01 * height,
+                      bottom: 0.01 * height),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      // color: isExpanded ?Colors.orange : Colors.transparent,
+                      color: Colors.orange,
+                      width: 1.0,
+                    ),
+                    //border radius to appear only when expanded
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      // margin: EdgeInsets.only(top: 0.04 * height, left:0.025*width, right: 0.025*width),
+                      child: customExpansionTile(
+                        // borderColor: Colors.transparent,
+                        onExpansionChanged: (bool expanded) {
+                          isExpanded = expanded;
+                          print(isExpanded);
+                          borderColor =
+                              isExpanded ? Colors.orange : Colors.transparent;
+                        },
+                        initiallyExpanded: isExpanded,
+                        // backgroundColor: Color(0xff535252),
+                        backgroundColor: Colors.black,
+                        leading: null,
+                        trailing: Icon(Icons.arrow_forward_rounded),
+                        iconColor: Colors.white,
+                        collapsedIconColor: Colors.white,
+                        collapsedBackgroundColor: Color(0xff535252),
+                        tilePadding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        // backgroundColor: Color(0xff535252),
+                        title: Container(
+                          // color: _isExpanded ? Colors.blue : null,
+                          child: Text(
+                            "Essential Information",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        // borderSide: BorderSide(color: Colors.white),
+
+                        children: [
+                            // Container(
+                            //
+                            // )
+                        ],
+                      )),
+                ),
                 Container(
                     width: 0.95 * width,
                     height: 0.075 * height,
@@ -815,17 +1084,17 @@ class profileScreen1State extends State<profileScreen1> {
                       //  navigate to EditableTextField screen
                       String initialValue = "ritvik";
                       // String finalValue = "9899326396";
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditableTextField(
-                                initialValue: initialValue,
-                                // finalValue: finalValue,
-                                onSave: (value) {
-                                  print(value);
-                                })),
-                        // MaterialPageRoute(builder:(context) => EditableTextField())
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => EditableTextField(
+                      //           initialValue: initialValue,
+                      //           // finalValue: finalValue,
+                      //           onSave: (value) {
+                      //             print(value);
+                      //           })),
+                      //   // MaterialPageRoute(builder:(context) => EditableTextField())
+                      // );
                     },
                     child: Text(
                       'Logout',
