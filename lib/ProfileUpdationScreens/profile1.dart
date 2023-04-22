@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import '../settings.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:holocron_auth_flutter/custom_expansion_tile.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../ProfileUpdationScreens/profile2.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:async';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
-
+import 'package:dropdown_button2/dropdown_button2.dart';
+import '../home.dart';
+import 'dart:io';
 //TASK ACTIONS
 //dropdowns and photo uploading left with the logic of completing the gauge and passing name and password from the signup screen1
 
@@ -18,7 +21,8 @@ final _formKey5 = GlobalKey<FormState>();
 final _formKey6 = GlobalKey<FormState>();
 final _formKey7 = GlobalKey<FormState>();
 final _formKey8 = GlobalKey<FormState>();
-
+final _formKey9 = GlobalKey<FormState>();
+final _formKey10 = GlobalKey<FormState>();
 
 class profileScreen1 extends StatefulWidget {
   final String name;
@@ -36,6 +40,30 @@ class profileScreen1 extends StatefulWidget {
 }
 
 class profileScreen1State extends State<profileScreen1> {
+  final List<String> gender = [
+    'Male',
+    'Female',
+    'Other',
+  ];
+  final List<String> privacy = ['Yes', 'No'];
+  String? selectedValue;
+  String? selectedValue2;
+  File? _imageFile;
+
+  // Future<void> _navigateToSecondScree n(BuildContext context, File image) async {
+  //   await Navigator.of(context).pushNamed(
+  //     '/secondScreen',
+  //     arguments: image,
+  //   );
+  // }
+
+  Future<void> _getImageFromGallery() async {
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    setState(() {
+      _imageFile = pickedFile != null ? File(pickedFile.path) : null;
+    });
+  }
+
   late TextEditingController _controller;
   late TextEditingController _controller2;
   late TextEditingController _controller3;
@@ -1029,6 +1057,97 @@ class profileScreen1State extends State<profileScreen1> {
 
                         children: [
                           Container(
+                            child: CircleAvatar(
+                              radius: 60,
+                              backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
+                              child: _imageFile == null
+                                  ? IconButton(
+                                icon: Icon(Icons.camera_alt),
+                                onPressed: _getImageFromGallery,
+                                iconSize: 30,
+                              )
+                                  : null,
+                            ),
+                          ),
+                          Container(
+                              height: 0.09 * height,
+                              width: 0.87 * width,
+                              decoration: BoxDecoration(
+                                color: Color(0xff2B2B2B),
+                                border: Border.all(
+                                  color: Colors.orange,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Form(
+                                key: _formKey9,
+                                child: SizedBox(
+                                  height: double.infinity,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      DropdownButtonFormField2(
+                                        decoration: InputDecoration(
+                                          fillColor: Color(0xff2B2B2B),
+                                          filled: true,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
+                                        iconStyleData: const IconStyleData(
+                                          // color: Colors.white,
+                                          // size: 30,
+                                          icon: const Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                        dropdownStyleData:
+                                            const DropdownStyleData(
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                          ),
+                                        ),
+                                        isExpanded: true,
+                                        hint: const Text(
+                                          "Gender",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.orange),
+                                        ),
+                                        items: gender
+                                            .map((item) =>
+                                                DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return " Please select your Gender";
+                                          }
+                                        },
+                                        onChanged: (value) {
+                                          //Do something when changing the item if you want.
+                                        },
+                                        onSaved: (value) {},
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          Container(
                               decoration: BoxDecoration(
                                 color: Color(0xff2B2B2B),
                                 border: Border.all(
@@ -1104,26 +1223,26 @@ class profileScreen1State extends State<profileScreen1> {
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           focusedErrorBorder:
-                                          OutlineInputBorder(
+                                              OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           errorStyle:
-                                          TextStyle(color: Colors.orange),
+                                              TextStyle(color: Colors.orange),
                                           hintText: 'Pincode',
                                           hintStyle:
-                                          TextStyle(color: Colors.orange),
+                                              TextStyle(color: Colors.orange),
                                         ),
                                       ),
                                     ),
@@ -1155,26 +1274,26 @@ class profileScreen1State extends State<profileScreen1> {
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           focusedErrorBorder:
-                                          OutlineInputBorder(
+                                              OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           errorStyle:
-                                          TextStyle(color: Colors.orange),
+                                              TextStyle(color: Colors.orange),
                                           hintText: 'Country',
                                           hintStyle:
-                                          TextStyle(color: Colors.orange),
+                                              TextStyle(color: Colors.orange),
                                         ),
                                       ),
                                     ),
@@ -1257,7 +1376,7 @@ class profileScreen1State extends State<profileScreen1> {
                           isExpanded = expanded;
                           print(isExpanded);
                           borderColor =
-                          isExpanded ? Colors.orange : Colors.transparent;
+                              isExpanded ? Colors.orange : Colors.transparent;
                         },
                         initiallyExpanded: isExpanded,
                         // backgroundColor: Color(0xff535252),
@@ -1280,6 +1399,84 @@ class profileScreen1State extends State<profileScreen1> {
                         // borderSide: BorderSide(color: Colors.white),
 
                         children: [
+                          Container(
+                              height: 0.09 * height,
+                              width: 0.87 * width,
+                              decoration: BoxDecoration(
+                                color: Color(0xff2B2B2B),
+                                border: Border.all(
+                                  color: Colors.orange,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Form(
+                                key: _formKey10,
+                                child: SizedBox(
+                                  height: double.infinity,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      DropdownButtonFormField2(
+                                        decoration: InputDecoration(
+                                          fillColor: Color(0xff2B2B2B),
+                                          filled: true,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
+                                        iconStyleData: const IconStyleData(
+                                          // color: Colors.white,
+                                          // size: 30,
+                                          icon: const Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                        dropdownStyleData:
+                                            const DropdownStyleData(
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                          ),
+                                        ),
+                                        isExpanded: true,
+                                        hint: const Text(
+                                          "Privacy Control",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.orange),
+                                        ),
+                                        items: privacy
+                                            .map((item) =>
+                                                DropdownMenuItem<String>(
+                                                  value: item,
+                                                  child: Text(
+                                                    item,
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return " Please select your Gender";
+                                          }
+                                        },
+                                        onChanged: (value) {
+                                          //Do something when changing the item if you want.
+                                        },
+                                        onSaved: (value) {},
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )),
                           Container(
                               decoration: BoxDecoration(
                                 color: Color(0xff2B2B2B),
@@ -1305,26 +1502,26 @@ class profileScreen1State extends State<profileScreen1> {
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           enabledBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           focusedErrorBorder:
-                                          OutlineInputBorder(
+                                              OutlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(10),
+                                                BorderRadius.circular(10),
                                           ),
                                           errorStyle:
-                                          TextStyle(color: Colors.orange),
+                                              TextStyle(color: Colors.orange),
                                           hintText: 'College Name',
                                           hintStyle:
-                                          TextStyle(color: Colors.orange),
+                                              TextStyle(color: Colors.orange),
                                         ),
                                       ),
                                     ),
@@ -1347,20 +1544,12 @@ class profileScreen1State extends State<profileScreen1> {
                                   )),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // if (_formKey2.currentState!.validate() &&
-                                  //     _formKey3.currentState!.validate() &&
-                                  //     _formKey4.currentState!.validate()) {
-                                  //   ScaffoldMessenger.of(context).showSnackBar(
-                                  //       SnackBar(
-                                  //           content: Text('Processing Data')));
-                                  //   _toggleExpansion();
-                                  //   setState(() {
-                                  //     _currentProgress += 13;
-                                  //     // print(isExpanded);
-                                  //     // isExpanded = !isExpanded;
-                                  //     // print(isExpanded);
-                                  //   });
-                                  // }
+                                  if (_formKey8.currentState != null ||
+                                      _formKey10.currentState != null) {
+                                    setState(() {
+                                      _currentProgress += 13;
+                                    });
+                                  }
                                 },
                                 child: Text(
                                   'Save and Proceed',
@@ -1371,10 +1560,7 @@ class profileScreen1State extends State<profileScreen1> {
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.transparent,
-
                                   shadowColor: Colors.transparent,
-                                  // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
-
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
@@ -1431,47 +1617,55 @@ class profileScreen1State extends State<profileScreen1> {
                       ),
                     )),
                 Container(
-                  color: Color(0xff535252),
-                  margin: EdgeInsets.only(top: 0.04 * height),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // setState(() {
-                      //   _currentProgress += 20;
-                      // });
-                      //  navigate to EditableTextField screen
-                      String initialValue = "ritvik";
-                      // String finalValue = "9899326396";
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => EditableTextField(
-                      //           initialValue: initialValue,
-                      //           // finalValue: finalValue,
-                      //           onSave: (value) {
-                      //             print(value);
-                      //           })),
-                      //   // MaterialPageRoute(builder:(context) => EditableTextField())
-                      // );
-                    },
-                    child: Text(
-                      'Logout',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent,
+                    width: 0.93 * width,
+                    height: 0.075 * height,
+                    margin: EdgeInsets.only(
+                        top: 0.02 * height, bottom: 0.02 * height),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.0),
+                        gradient: const LinearGradient(
+                          colors: [Colors.orange, Colors.deepOrange],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.1, 0.9],
+                          tileMode: TileMode.repeated,
+                        )),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        String  name = widget.name;
+                        String number = widget.number;
+                        String  email = _controller.text;
+                        File? image = _imageFile;
 
-                      shadowColor: Colors.transparent,
-                      // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => homeScreen1(
+                                    name: widget.name,
+                                    number: widget.number,
+                                    image: image,
 
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                                  )),
+                        );
+                      },
+                      child: Text(
+                        'Continue',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500),
                       ),
-                    ),
-                  ),
-                ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.transparent,
+
+                        shadowColor: Colors.transparent,
+                        // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
+
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    )),
               ],
             ),
           ),
