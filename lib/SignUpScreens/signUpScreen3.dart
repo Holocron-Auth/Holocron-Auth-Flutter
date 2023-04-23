@@ -5,6 +5,16 @@ import '../SignUpScreens/signUpScreen1.dart';
 import '../ProfileUpdationScreens/profile1.dart';
 
 class signUpScreen3 extends StatelessWidget {
+  final String name;
+  final String number;
+  final String password;
+
+  const signUpScreen3(
+      {Key? key,
+      required this.name,
+      required this.number,
+      required this.password})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     double width = (MediaQuery.of(context).size.width);
@@ -75,14 +85,19 @@ class signUpScreen3 extends StatelessWidget {
                     )),
                 child: ElevatedButton(
                   onPressed: () {
-                    String initialValue = 'Ritvik Pendyala';
-                    String number = "9502546860";
-                    // Do something when the button is pressed
+                    // String initialValue = 'Ritvik Pendyala';
+                    // String number = "9502546860";
+
+
+                    // String name = widget.name;
+                    // String number = widget.number;
+                    // String password = widget.password;
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => profileScreen1(
-                              name: initialValue,
+                              name: name,
                               number: number,
                               onSave: (value) {
                                 print(value);

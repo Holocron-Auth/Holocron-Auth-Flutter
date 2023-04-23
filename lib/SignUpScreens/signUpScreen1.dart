@@ -18,6 +18,23 @@ class signUpScreen1 extends StatefulWidget {
 }
 
 class signUpScreen1State extends State<signUpScreen1> {
+  late TextEditingController _controller;
+  late TextEditingController _controller2;
+  late TextEditingController _controller3;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controller2.dispose();
+    _controller3.dispose();
+    super.dispose();
+  }
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _controller2 = TextEditingController();
+    _controller3 = TextEditingController();
+  }
   @override
   bool validateStructure(String value) {
     String pattern =
@@ -45,124 +62,193 @@ class signUpScreen1State extends State<signUpScreen1> {
                   margin: EdgeInsets.only(top: 0.15 * height),
                   child: Image.asset('assets/Logo.png'),
                 ),
-                //  name,mobile number and email id fields along with a request OTP button , and a  login text button
-                // Container(),
                 Container(
-                  width: 0.9 * width,
-                  height: 0.08 * height,
-                  margin: EdgeInsets.only(top: 0.07 * height),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      border: Border.all(width: 1, color: Colors.orange),
-                      color: Color(0xff404040)),
-                  padding:
-                      EdgeInsets.only(left: 0.05 * width, top: 0.03 * width),
-                  child: Form(
-                    key: _formKey,
-                    child: TextFormField(
-                      controller: name,
-                      decoration: InputDecoration(
-                        // border: OutlineInputBorder(
-                        //   borderSide: BorderSide(width: 1, color: Colors.orange),
-                        //   borderRadius: BorderRadius.circular(15.0),
-                        // ),
-                        border: InputBorder.none,
-                        hintText: 'Name',
-                        // labelText: 'Mobile Number',
-                        hintStyle: TextStyle(
-                            color: Color(0xffFFB267),
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500),
-                        contentPadding: EdgeInsets.only(bottom: 0.025 * height),
+                    decoration: BoxDecoration(
+                      color: Color(0xff2B2B2B),
+                      border: Border.all(
+                        // color: isExpanded ?Colors.orange : Colors.transparent,
+                        color: Colors.orange,
+                        width: 1.0,
                       ),
+                      //border radius to appear only when expanded
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                  ),
-                ),
-                Container(
-                  width: 0.9 * width,
-                  height: 0.08 * height,
-                  margin: EdgeInsets.only(top: 0.03 * height),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      border: Border.all(width: 1, color: Colors.orange),
-                      color: Color(0xff404040)),
-                  padding:
-                      EdgeInsets.only(left: 0.05 * width, top: 0.03 * width),
-                  child: Form(
-                    key: _formKey1,
-                    child: TextFormField(
-                      controller: mobileNo,
-                      decoration: InputDecoration(
-                        // border: OutlineInputBorder(
-                        //   borderSide: BorderSide(width: 1, color: Colors.orange),
-                        //   borderRadius: BorderRadius.circular(15.0),
-                        // ),
-                        border: InputBorder.none,
-                        hintText: 'Mobile Number or Email ID',
-                        // labelText: 'Mobile Number',
-                        hintStyle: TextStyle(
-                            color: Color(0xffFFB267),
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500),
-                        contentPadding: EdgeInsets.only(bottom: 0.025 * height),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 0.9 * width,
-                  height: 0.08 * height,
-                  margin: EdgeInsets.only(top: 0.03 * height),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      border: Border.all(width: 1, color: Colors.orange),
-                      color: Color(0xff404040)),
-                  padding:
-                      EdgeInsets.only(left: 0.05 * width, top: 0.01 * width),
-                  child: Form(
-                    key: _formKey2,
-                    child: TextFormField(
-                      controller: password,
-                      obscureText: !_isPasswordVisible,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a Password';
-                        }
-                        else if(validateStructure(value)){
-                          return 'Please enter a valid stronger password';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        // border: OutlineInputBorder(
-                        //   borderSide: BorderSide(width: 1, color: Colors.orange),
-                        //   borderRadius: BorderRadius.circular(15.0),
-                        // ),
-                        border: InputBorder.none,
-                        hintText: 'Password',
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                          child: Icon(
-                            _isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                    margin: EdgeInsets.only(
+                        top: 0.1 * height,
+                        right: 0.03 * width,
+                        left: 0.03 * width),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Form(
+                            key: _formKey,
+                            child: TextFormField(
+                              controller: _controller,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                focusedErrorBorder:
+                                OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                errorStyle:
+                                TextStyle(color: Colors.orange),
+                                hintText: 'Name',
+                                hintStyle:
+                                TextStyle(color: Colors.orange),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your name';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
                         ),
-
-                        // labelText: 'Mobile Number',
-                        hintStyle: TextStyle(
-                            color: Color(0xffFFB267),
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500),
-                        contentPadding: EdgeInsets.only(bottom: 0.025 * height),
+                      ],
+                    )),
+                Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xff2B2B2B),
+                      border: Border.all(
+                        // color: isExpanded ?Colors.orange : Colors.transparent,
+                        color: Colors.orange,
+                        width: 1.0,
                       ),
+                      //border radius to appear only when expanded
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                  ),
-                ),
+                    margin: EdgeInsets.only(
+                        top: 0.02 * height,
+                        right: 0.03 * width,
+                        left: 0.03 * width),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Form(
+                            key: _formKey1,
+                            child: TextFormField(
+                              controller: _controller2,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                focusedErrorBorder:
+                                OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                errorStyle:
+                                TextStyle(color: Colors.orange),
+                                hintText: 'Mobile Number',
+                                hintStyle:
+                                TextStyle(color: Colors.orange),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your mobile number';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+                Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xff2B2B2B),
+                      border: Border.all(
+                        // color: isExpanded ?Colors.orange : Colors.transparent,
+                        color: Colors.orange,
+                        width: 1.0,
+                      ),
+                      //border radius to appear only when expanded
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    margin: EdgeInsets.only(
+                        top: 0.02 * height,
+                        right: 0.03 * width,
+                        left: 0.03 * width),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Form(
+                            key: _formKey2,
+                            child: TextFormField(
+                              controller: _controller3,
+                              obscureText: !_isPasswordVisible,
+                              validator: (value){
+                                if(value ==null || value.isEmpty){
+                                  return 'Please enter a Password';
+                                }
+                                else if(!validateStructure(value)){
+                                  return 'Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character';
+                                }
+                              },
+                              decoration: InputDecoration(
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                  child: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                focusedErrorBorder:
+                                OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(10),
+                                ),
+                                errorStyle:
+                                TextStyle(color: Colors.orange),
+                                hintText: 'Password',
+                                hintStyle:
+                                TextStyle(color: Colors.orange),
+                              ),
+
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
                 Container(
                     width: 0.8 * width,
                     height: 0.065 * height,
@@ -178,12 +264,6 @@ class signUpScreen1State extends State<signUpScreen1> {
                         )),
                     child: ElevatedButton(
                       onPressed: () {
-                        // Do something when the button is pressed
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => LoginScreenState()),
-                        // );
-
                         if (_formKey.currentState!.validate() &&
                             _formKey1.currentState!.validate() &&
                             _formKey2.currentState!.validate()) {
@@ -191,11 +271,15 @@ class signUpScreen1State extends State<signUpScreen1> {
                           _formKey1.currentState!.save();
                           _formKey2.currentState!.save();
                         }
-
+                        String name = _controller.text;
+                        String mobile = _controller2.text;
+                        String password = _controller3.text;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => signUpScreenState2()),
+                              builder: (context) => signUpScreenState2(name: name,number:mobile,password: password,onSave: (value) {
+                                print(value);
+                              })),
                         );
                       },
                       child: Text(

@@ -226,6 +226,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  mobile_number:
+    dependency: "direct main"
+    description:
+      name: mobile_number
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   model_viewer_plus:
     dependency: "direct main"
     description:

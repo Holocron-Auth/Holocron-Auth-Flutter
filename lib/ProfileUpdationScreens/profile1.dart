@@ -14,6 +14,8 @@ import 'dart:io';
 //dropdowns and photo uploading left with the logic of completing the gauge and passing name and password from the signup screen1
 
 int _currentProgress = 20;
+int counter = 2;
+int counter1 = 0;
 final _formKey2 = GlobalKey<FormState>();
 final _formKey3 = GlobalKey<FormState>();
 final _formKey4 = GlobalKey<FormState>();
@@ -23,6 +25,8 @@ final _formKey7 = GlobalKey<FormState>();
 final _formKey8 = GlobalKey<FormState>();
 final _formKey9 = GlobalKey<FormState>();
 final _formKey10 = GlobalKey<FormState>();
+final _formKey11 = GlobalKey<FormState>();
+DateTime _currentDate = DateTime.now();
 
 class profileScreen1 extends StatefulWidget {
   final String name;
@@ -45,7 +49,7 @@ class profileScreen1State extends State<profileScreen1> {
     'Female',
     'Other',
   ];
-  final List<String> privacy = ['Yes', 'No'];
+  final List<String> privacy = ['On', 'Off'];
   String? selectedValue;
   String? selectedValue2;
   File? _imageFile;
@@ -89,7 +93,8 @@ class profileScreen1State extends State<profileScreen1> {
   int _timerCountdown = 60;
   bool _isTimerRunning = false;
   Timer? _resendOtpTimer;
-  bool isChecked = false;
+  String? _selectedValue;
+  String? _selectedValue2;
 
   void _startResendOtpTimer() {
     setState(() {
@@ -118,9 +123,9 @@ class profileScreen1State extends State<profileScreen1> {
     _resendOtpTimer?.cancel();
   }
 
-  void _toggleExpansion() {
+  void _collapseTile() {
     setState(() {
-      isExpanded = !isExpanded;
+      isExpanded = false;
     });
   }
 
@@ -369,10 +374,8 @@ class profileScreen1State extends State<profileScreen1> {
                       onExpansionChanged: (bool expanded) {
                         isExpanded = expanded;
                         print(isExpanded);
-                        borderColor =
-                            isExpanded ? Colors.orange : Colors.transparent;
                       },
-                      initiallyExpanded: isExpanded,
+                      initiallyExpanded: true,
                       // backgroundColor: Color(0xff535252),
                       backgroundColor: Colors.black,
                       leading: null,
@@ -626,7 +629,7 @@ class profileScreen1State extends State<profileScreen1> {
                                             context: context,
                                             barrierDismissible: false,
                                             builder: (context) => Container(
-                                                height: 0.25 * height,
+                                                height: 0.1 * height,
                                                 width: 0.3 * width,
                                                 decoration: BoxDecoration(
                                                   color: Color(0xff2B2B2B),
@@ -636,19 +639,35 @@ class profileScreen1State extends State<profileScreen1> {
                                                 ),
                                                 margin: EdgeInsets.only(
                                                     top: 0.3 * height,
-                                                    bottom: 0.3 * height,
+                                                    bottom: 0.22 * height,
                                                     left: 0.1 * width,
                                                     right: 0.1 * width),
                                                 child: Column(children: [
                                                   Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xff2B2B2B),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                      border: Border.all(
+                                                        // color: isExpanded ?Colors.orange : Colors.transparent,
+                                                        color: Colors.orange,
+                                                        width: 1.0,
+                                                      ),
+                                                    ),
                                                     margin: EdgeInsets.only(
                                                         top: 0.04 * height),
+                                                    padding: EdgeInsets.only(
+                                                        top: 0.02 * height,
+                                                        bottom: 0.02 * height,
+                                                        left: 0.02 * width,
+                                                        right: 0.02 * width),
                                                     child: Text(
                                                         '${_controller3.text}',
                                                         style: TextStyle(
                                                             color:
                                                                 Colors.orange,
-                                                            fontSize: 20)),
+                                                            fontSize: 18)),
                                                   ),
                                                   Container(
                                                     margin: EdgeInsets.only(
@@ -924,8 +943,11 @@ class profileScreen1State extends State<profileScreen1> {
                           child: Row(
                             children: [
                               Expanded(
+                                  child: Form(
+                                key: _formKey11,
                                 child: TextFormField(
                                   decoration: InputDecoration(
+                                    errorStyle: TextStyle(color: Colors.orange),
                                     filled: true,
                                     fillColor: Color(0xff2B2B2B),
                                     border: OutlineInputBorder(
@@ -941,17 +963,36 @@ class profileScreen1State extends State<profileScreen1> {
                                     labelText: 'Date of Birth',
                                     labelStyle: TextStyle(color: Colors.orange),
                                   ),
+                                  validator: (value) {
+                                    print(selectedDate);
+                                    print(_currentDate);
+                                    final difference = _currentDate
+                                        .difference(selectedDate)
+                                        .inDays;
+                                    print(difference);
+                                    if (value == null ||
+                                        value.isEmpty ||
+                                        difference < 5840) {
+                                      // if(difference < 5840){
+                                      return 'You should be above 16 to use the platform';
+                                      // }
+                                    }
+                                    return null;
+                                  },
                                   readOnly: true,
                                   controller: TextEditingController(
                                     text: "${selectedDate.toLocal()}"
                                         .split(' ')[0],
                                   ),
                                 ),
-                              ),
+                              )),
                               IconButton(
                                 icon: Icon(Icons.calendar_today,
                                     color: Colors.orange),
-                                onPressed: () => _selectDate(context),
+                                onPressed: () => {
+                                  //validate the date picked if you're above 16 years old
+                                  _selectDate(context)
+                                },
                               ),
                             ],
                           ),
@@ -974,16 +1015,15 @@ class profileScreen1State extends State<profileScreen1> {
                               onPressed: () {
                                 if (_formKey2.currentState!.validate() &&
                                     _formKey3.currentState!.validate() &&
-                                    _formKey4.currentState!.validate()) {
+                                    _formKey4.currentState!.validate() &&
+                                    _formKey11.currentState!.validate()) {
+                                  print(_formKey11.currentState!.validate());
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text('Processing Data')));
-                                  _toggleExpansion();
+                                  _collapseTile();
                                   setState(() {
-                                    _currentProgress += 13;
-                                    // print(isExpanded);
-                                    // isExpanded = !isExpanded;
-                                    // print(isExpanded);
+                                    _currentProgress = 40;
                                   });
                                 }
                               },
@@ -1058,38 +1098,39 @@ class profileScreen1State extends State<profileScreen1> {
 
                         children: [
                           Container(
-                            margin: EdgeInsets.only(
-                                right: 0.03 * width,
-                                left: 0.05 * width, bottom: 0.02 * height),
-                              child:Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: CircleAvatar(
-                                    radius: 60,
-                                    backgroundImage: _imageFile != null
-                                        ? FileImage(_imageFile!)
-                                        : null,
-                                    child: _imageFile == null
-                                        ? IconButton(
-                                            icon: Icon(Icons.camera_alt),
-                                            onPressed: _getImageFromGallery,
-                                            iconSize: 30,
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                                Container(
-                                  child: IconButton(
-                                    icon:
-                                        Icon(Icons.edit, color: Colors.orange),
-                                    onPressed: () {
-                                      _getImageFromGallery();
-                                      // code to open gallery or camera for selecting a new image
-                                    },
-                                  ),
-                                )
-                              ])),
+                              margin: EdgeInsets.only(
+                                  right: 0.03 * width,
+                                  left: 0.05 * width,
+                                  bottom: 0.02 * height),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      child: CircleAvatar(
+                                        radius: 60,
+                                        backgroundImage: _imageFile != null
+                                            ? FileImage(_imageFile!)
+                                            : null,
+                                        child: _imageFile == null
+                                            ? IconButton(
+                                                icon: Icon(Icons.camera_alt),
+                                                onPressed: _getImageFromGallery,
+                                                iconSize: 30,
+                                              )
+                                            : null,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: IconButton(
+                                        icon: Icon(Icons.edit,
+                                            color: Colors.orange),
+                                        onPressed: () {
+                                          _getImageFromGallery();
+                                          // code to open gallery or camera for selecting a new image
+                                        },
+                                      ),
+                                    )
+                                  ])),
                           Container(
                               height: 0.09 * height,
                               width: 0.87 * width,
@@ -1337,20 +1378,9 @@ class profileScreen1State extends State<profileScreen1> {
                                   )),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // if (_formKey2.currentState!.validate() &&
-                                  //     _formKey3.currentState!.validate() &&
-                                  //     _formKey4.currentState!.validate()) {
-                                  //   ScaffoldMessenger.of(context).showSnackBar(
-                                  //       SnackBar(
-                                  //           content: Text('Processing Data')));
-                                  //   _toggleExpansion();
-                                  //   setState(() {
-                                  //     _currentProgress += 13;
-                                  //     // print(isExpanded);
-                                  //     // isExpanded = !isExpanded;
-                                  //     // print(isExpanded);
-                                  //   });
-                                  // }
+                                  //  count the number of non null formKeys in this expansion tile as all aren't compulaory fields
+
+                                  int count = 0;
                                 },
                                 child: Text(
                                   'Save and Proceed',
@@ -1439,6 +1469,7 @@ class profileScreen1State extends State<profileScreen1> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       DropdownButtonFormField2(
+                                        value: _selectedValue2,
                                         decoration: InputDecoration(
                                           fillColor: Color(0xff2B2B2B),
                                           filled: true,
@@ -1484,13 +1515,11 @@ class profileScreen1State extends State<profileScreen1> {
                                                   ),
                                                 ))
                                             .toList(),
-                                        validator: (value) {
-                                          if (value == null) {
-                                            return " Please select your Gender";
-                                          }
-                                        },
                                         onChanged: (value) {
                                           //Do something when changing the item if you want.
+                                          setState(() {
+                                            _selectedValue2 = value;
+                                          });
                                         },
                                         onSaved: (value) {},
                                       ),
@@ -1565,11 +1594,32 @@ class profileScreen1State extends State<profileScreen1> {
                                   )),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (_formKey8.currentState != null ||
-                                      _formKey10.currentState != null) {
-                                    setState(() {
-                                      _currentProgress += 13;
-                                    });
+                                  if (_formKey8.currentState!.validate()) {
+                                    if (_controller7 != null) {
+                                      print(_controller7.value);
+                                      // print(_controller7);
+                                      String text = _controller7.text;
+                                      if (text.isNotEmpty) {
+                                        print("yes1");
+                                        _formKey8.currentState!.save();
+                                        setState(() {
+                                          _currentProgress += 10;
+                                        });
+                                      }
+                                    }
+                                  }
+                                  if (_formKey10.currentState!.validate()) {
+                                    print(_selectedValue2);
+                                    if (_selectedValue2 == "On" ||
+                                        _selectedValue2 == "Off") {
+                                      print("yes2");
+                                      _formKey10.currentState!.save();
+                                      setState(() {
+                                        _currentProgress += 10;
+                                      });
+                                    } else {
+                                      print("no2");
+                                    }
                                   }
                                 },
                                 child: Text(
@@ -1657,16 +1707,19 @@ class profileScreen1State extends State<profileScreen1> {
                         String number = widget.number;
                         String email = _controller.text;
                         File? image = _imageFile;
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => homeScreen1(
-                                    name: widget.name,
-                                    number: widget.number,
-                                    image: image,
-                                  )),
-                        );
+                        //2,3,4,11
+                        if( _formKey2.currentState!.validate() && _formKey3.currentState!.validate() && _formKey4.currentState!.validate() && _formKey11.currentState!.validate()){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    homeScreen1(
+                                      name: widget.name,
+                                      number: widget.number,
+                                      image: image,
+                                    )),
+                          );
+                        }
                       },
                       child: Text(
                         'Continue',
@@ -1716,6 +1769,7 @@ class profileScreen1State extends State<profileScreen1> {
   }
 
   buildMaterialDatePicker(BuildContext context) async {
+    DateTime _currentDate = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -1725,9 +1779,24 @@ class profileScreen1State extends State<profileScreen1> {
       initialDatePickerMode: DatePickerMode.day,
       selectableDayPredicate: _decideWhichDayToEnable,
     );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
+    // if (picked != null && picked != selectedDate) {
+    //   setState(() {
+    //     selectedDate = picked;
+    //   });
+    // }
+    if (picked != null && picked != selectedDate) {
+      final difference = _currentDate.difference(picked).inDays;
+      if (difference < 16 * 365) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("You must be at least 16 years old."),
+          ),
+        );
+      } else {
+        setState(() {
+          selectedDate = picked;
+        });
+      }
+    }
   }
 }
