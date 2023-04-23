@@ -58,7 +58,8 @@ class profileScreen1State extends State<profileScreen1> {
   // }
 
   Future<void> _getImageFromGallery() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     setState(() {
       _imageFile = pickedFile != null ? File(pickedFile.path) : null;
     });
@@ -1057,18 +1058,38 @@ class profileScreen1State extends State<profileScreen1> {
 
                         children: [
                           Container(
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
-                              child: _imageFile == null
-                                  ? IconButton(
-                                icon: Icon(Icons.camera_alt),
-                                onPressed: _getImageFromGallery,
-                                iconSize: 30,
-                              )
-                                  : null,
-                            ),
-                          ),
+                            margin: EdgeInsets.only(
+                                right: 0.03 * width,
+                                left: 0.05 * width, bottom: 0.02 * height),
+                              child:Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child: CircleAvatar(
+                                    radius: 60,
+                                    backgroundImage: _imageFile != null
+                                        ? FileImage(_imageFile!)
+                                        : null,
+                                    child: _imageFile == null
+                                        ? IconButton(
+                                            icon: Icon(Icons.camera_alt),
+                                            onPressed: _getImageFromGallery,
+                                            iconSize: 30,
+                                          )
+                                        : null,
+                                  ),
+                                ),
+                                Container(
+                                  child: IconButton(
+                                    icon:
+                                        Icon(Icons.edit, color: Colors.orange),
+                                    onPressed: () {
+                                      _getImageFromGallery();
+                                      // code to open gallery or camera for selecting a new image
+                                    },
+                                  ),
+                                )
+                              ])),
                           Container(
                               height: 0.09 * height,
                               width: 0.87 * width,
@@ -1632,9 +1653,9 @@ class profileScreen1State extends State<profileScreen1> {
                         )),
                     child: ElevatedButton(
                       onPressed: () {
-                        String  name = widget.name;
+                        String name = widget.name;
                         String number = widget.number;
-                        String  email = _controller.text;
+                        String email = _controller.text;
                         File? image = _imageFile;
 
                         Navigator.push(
@@ -1644,7 +1665,6 @@ class profileScreen1State extends State<profileScreen1> {
                                     name: widget.name,
                                     number: widget.number,
                                     image: image,
-
                                   )),
                         );
                       },
