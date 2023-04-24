@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../profile.dart';
 import 'dart:io';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+import '../tips.dart';
+
 
 class homeScreen1 extends StatefulWidget {
   final String name;
@@ -37,9 +40,10 @@ class homeScreen1State extends State<homeScreen1> {
     int dashno1 = 14;
     int dashno2 = 17;
     int dashno3 = 96;
-    int dashno4=12;
-    int dashno5= 20;
-    int dashno6= 32;
+    int dashno4 = 12;
+    int dashno5 = 20;
+    int dashno6 = 32;
+    int _currentProgress=90;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -261,139 +265,177 @@ class homeScreen1State extends State<homeScreen1> {
                               ])),
                         ])),
                     Container(
-                      child: Row(children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: 0.01 * height,
-                              right: 0.01 * width,
-                              left: 0.04 * width
-                          ),
-                            width: 0.25 * width,
-                            height: 0.15 * height,
-                            decoration: BoxDecoration(
-                              color: Color(0xff535252),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                    margin: EdgeInsets.only(
-                                        left: 0.02 * width,
-                                        right: 0.02 * width),
-                                    child: Text(
-                                      dashno4.toString()+'s',
-                                      style: TextStyle(
-                                        color: Color(0xffFFB267),
-                                        fontSize: 49,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    )),
-                                Container(
-                                  child: Text(
-                                    "Avg. login time",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                              ],
-                            )),
-                        //Fill this
-                        Container(
-                          child:Row(
-                            children:[
-
-                              Column(
-                                children:[
-
+                      child: Row(
+                        children: [
+                          Container(
+                              margin: EdgeInsets.only(
+                                  top: 0.01 * height,
+                                  right: 0.01 * width,
+                                  left: 0.04 * width),
+                              width: 0.25 * width,
+                              height: 0.15 * height,
+                              decoration: BoxDecoration(
+                                color: Color(0xff535252),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                              ),
+                              child: Column(
+                                children: [
                                   Container(
                                       margin: EdgeInsets.only(
-                                          top: 0.01 * height,
-                                          right: 0.01 * width,
-                                          left: 0.01 * width
-                                      ),
-                                      width: 0.25 * width,
-                                      height: 0.15 * height,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xff535252),
-                                        borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                              margin: EdgeInsets.only(
-                                                  left: 0.02 * width,
-                                                  right: 0.02 * width),
-                                              child: Text(
-                                                dashno5.toString(),
-                                                style: TextStyle(
-                                                  color: Color(0xffFFB267),
-                                                  fontSize: 49,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
-                                          Container(
-                                            child: Text(
-                                              "mins\n Saved",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ],
+                                          left: 0.02 * width,
+                                          right: 0.02 * width),
+                                      child: Text(
+                                        dashno4.toString() + 's',
+                                        style: TextStyle(
+                                          color: Color(0xffFFB267),
+                                          fontSize: 49,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       )),
-
-                                ]
-                              ), Container()
-                            ]
-                          )
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(
-                                top: 0.01 * height,
-                                right: 0.01 * width,
-                                left: 0.01 * width
-                            ),
-                            width: 0.25 * width,
-                            height: 0.15 * height,
-                            decoration: BoxDecoration(
-                              color: Color(0xff535252),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                    margin: EdgeInsets.only(
-                                        left: 0.02 * width,
-                                        right: 0.02 * width),
+                                  Container(
                                     child: Text(
-                                      dashno6.toString(),
+                                      "Avg. login time",
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: Color(0xffFFB267),
-                                        fontSize: 49,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    )),
-                                Container(
-                                  child: Text(
-                                    "Permissions\nGranted",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400),
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )),
-                      ],),
+                                ],
+                              )),
+                          //Fill this
+                          Container(
+                              child: Row(children: [
+                            Column(children: [
+                              Container(
+                                  margin: EdgeInsets.only(
+                                      top: 0.01 * height,
+                                      right: 0.01 * width,
+                                      left: 0.01 * width),
+                                  width: 0.34 * width,
+                                  height: 0.15 * height,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff535252),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        color: Colors.transparent,
+                                        margin: EdgeInsets.only(
+                                            left: 0.01 *width),
+                                        height: 0.15 * MediaQuery.of(context).size.height,
+                                        width: 0.13 * MediaQuery.of(context).size.width,
+                                        child: SfRadialGauge(
+                                          axes: <RadialAxis>[
+                                            RadialAxis(
+                                              startAngle: 360,
+                                              endAngle: 360,
+                                              showLabels: false,
+                                              showTicks: false,
+                                              minimum: 0,
+                                              maximum: 100,
+                                              axisLineStyle: AxisLineStyle(
+                                                color: Color(0xff2B2B2B),
+                                                thickness: 15,
+                                                cornerStyle: CornerStyle.bothFlat,
+                                              ),
+                                              pointers: <GaugePointer>[
+                                                RangePointer(
+                                                  value: _currentProgress.toDouble(),
+                                                  onValueChanged: (value) {
+                                                    setState(() {
+                                                      double _currentProgress1 = value;
+                                                      _currentProgress =
+                                                          _currentProgress1.toInt();
+                                                      // _currentProgress = value;
+                                                    });
+                                                  },
+                                                  cornerStyle: CornerStyle.bothFlat,
+                                                  width: 15,
+                                                  enableAnimation: true,
+                                                  animationType: AnimationType.ease,
+                                                  color: Color(0xffFFB267),
+                                                )
+                                              ],
+
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Column(
+                                  children:[
+
+                                      Container(
+                                          margin: EdgeInsets.only(
+                                              left: 0.02 * width,
+                                              right: 0.02 * width),
+                                          child: Text(
+                                            dashno5.toString(),
+                                            style: TextStyle(
+                                              color: Color(0xffFFB267),
+                                              fontSize: 49,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
+                                      Container(
+                                        child: Text(
+                                          "mins\n Saved",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ),
+                                    ],
+                                  )]),),
+                            ]),
+                            Container()
+                          ])),
+                          Container(
+                              margin: EdgeInsets.only(
+                                  top: 0.01 * height,
+                                  right: 0.01 * width,
+                                  left: 0.01 * width),
+                              width: 0.25 * width,
+                              height: 0.15 * height,
+                              decoration: BoxDecoration(
+                                color: Color(0xff535252),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(
+                                          left: 0.02 * width,
+                                          right: 0.02 * width),
+                                      child: Text(
+                                        dashno6.toString(),
+                                        style: TextStyle(
+                                          color: Color(0xffFFB267),
+                                          fontSize: 49,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      )),
+                                  Container(
+                                    child: Text(
+                                      "Permissions\nGranted",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ],
+                      ),
                     )
                   ],
                 )),
@@ -401,6 +443,123 @@ class homeScreen1State extends State<homeScreen1> {
                 width: 0.95 * width,
                 height: 0.55 * height,
                 margin: EdgeInsets.only(top: 0.02 * height),
+                decoration: BoxDecoration(
+                  color: Color(0xff2E2E2E),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: 0.02 * height,
+                          right: 0.5 * width,
+                          left: 0.02 * width),
+                      child: Text(
+                        'Review Access',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xffFFB267),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(
+                            top: 0.005 * height,
+                            right: 0.01 * width,
+                            left: 0.01 * width),
+                        child: Text(
+                          'You have used Holocron to log into $dashno1 Services',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )),
+                    Container(
+                      height: 0.05 * height,
+                      width: 0.25 * width,
+                      margin: EdgeInsets.only(
+                          right: 0.02 * width, left: 0.68 * width),
+                      child: TextButton(
+                        onPressed: () {
+                          // code to execute when the button is pressed
+                        },
+                        child: Text(
+                          "View More",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+            Container(
+                width: 0.95 * width,
+                height: 0.55 * height,
+                margin: EdgeInsets.only(top: 0.02 * height),
+                decoration: BoxDecoration(
+                  color: Color(0xff2E2E2E),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: 0.02 * height,
+                          right: 0.25 * width,
+                          left: 0.02 * width),
+                      child: Text(
+                        'Security Fitness Report',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xffFFB267),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(
+                            top: 0.005 * height,
+                            right: 0.01 * width,
+                            left: 0.02 * width),
+                        child: Text(
+                          'Secure is your middle name! Your account is secure more than 96% of  SmartPhone users. Way to make it happen!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )),
+                    Container(
+                      height: 0.05 * height,
+                      width: 0.25 * width,
+                      margin: EdgeInsets.only(
+                          right: 0.02 * width, left: 0.68 * width),
+                      child: TextButton(
+                        onPressed: () {
+                          // code to execute when the button is pressed
+
+                        },
+                        child: Text(
+                          "View More",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+            Container(
+                width: 0.95 * width,
+                height: 0.55 * height,
+                margin: EdgeInsets.only(top: 0.02 * height, bottom: 0.04*height),
                 decoration: BoxDecoration(
                   color: Color(0xff2E2E2E),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -506,6 +665,12 @@ class homeScreen1State extends State<homeScreen1> {
                       child: TextButton(
                         onPressed: () {
                           // code to execute when the button is pressed
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => tipsScreen(),
+                            ),
+                          );
                         },
                         child: Text(
                           "View More",

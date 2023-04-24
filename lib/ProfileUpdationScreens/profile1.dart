@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../settings.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:holocron_auth_flutter/custom_expansion_tile.dart';
+// import 'package:holocron_auth_flutter/custom_expansion_tile.dart';
+import '../custom_expansion_tile.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../ProfileUpdationScreens/profile2.dart';
 import 'package:flutter/cupertino.dart';

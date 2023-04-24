@@ -22,6 +22,23 @@ class profileScreen1State extends State<profileScreen>{
         child:SingleChildScrollView(
           child:Column(
             children:[
+              Container(
+                margin: EdgeInsets.only(top:0.06*height),
+                  child:Row(
+          children:[
+              Container(
+                margin: EdgeInsets.only(left: 0.05*width, right: 0.08*width),
+                child:IconButton(icon:Icon(Icons.arrow_back_ios), color:Colors.white, iconSize: 30,
+                    onPressed: (){
+                  Navigator.pop(context);
+                },)
+                ),
+
+
+              Container(
+                // margin: EdgeInsets.only(top: 0.08*height, bottom: 0.1*height),
+                child:Text("Profile Screen",style:TextStyle(color:Colors.white, fontSize: 30, fontWeight: FontWeight.bold))
+              ),]))
 
             ]
           )

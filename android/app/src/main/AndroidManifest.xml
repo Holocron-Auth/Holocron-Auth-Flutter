@@ -2,7 +2,7 @@
     package="com.example.holocron_auth_flutter">
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
    <application
-        android:label="holocron_auth_flutter"
+        android:label="Holocron"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

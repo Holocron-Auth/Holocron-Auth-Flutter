@@ -10,8 +10,8 @@ class signUpScreenState2 extends StatefulWidget {
   final String password;
   final void Function(String) onSave;
 
-  const signUpScreenState2({
-    Key? key,
+  const signUpScreenState2(
+      {Key? key,
       required this.name,
       required this.number,
       required this.password,
@@ -85,7 +85,10 @@ class signUpScreen2 extends State<signUpScreenState2> {
     double height = (MediaQuery.of(context).size.height);
 
     return Scaffold(
-      body: Container(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.black,
+      body: SingleChildScrollView(
+          child: Container(
         color: Colors.black,
         child: Center(
             child: Column(
@@ -217,11 +220,12 @@ class signUpScreen2 extends State<signUpScreenState2> {
                     String number = widget.number;
                     String password = widget.password;
 
-
                     // Do something when the button is pressed
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => signUpScreen3(name:name, number:number, password:password)),
+                      MaterialPageRoute(
+                          builder: (context) => signUpScreen3(
+                              name: name, number: number, password: password)),
                     );
                   },
                   child: Text(
@@ -300,7 +304,7 @@ class signUpScreen2 extends State<signUpScreenState2> {
             //     )),
           ],
         )),
-      ),
+      )),
     );
   }
 }
