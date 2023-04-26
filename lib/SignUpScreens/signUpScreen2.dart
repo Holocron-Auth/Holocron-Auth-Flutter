@@ -7,14 +7,14 @@ import '../SignUpScreens/signUpScreen3.dart';
 class signUpScreenState2 extends StatefulWidget {
   final String name;
   final String number;
-  final String password;
+  final String email;
   final void Function(String) onSave;
 
   const signUpScreenState2(
       {Key? key,
       required this.name,
       required this.number,
-      required this.password,
+      required this.email,
       required this.onSave})
       : super(key: key);
 
@@ -218,14 +218,15 @@ class signUpScreen2 extends State<signUpScreenState2> {
                   onPressed: () {
                     String name = widget.name;
                     String number = widget.number;
-                    String password = widget.password;
+                    String email = widget.email;
 
                     // Do something when the button is pressed
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => signUpScreen3(
-                              name: name, number: number, password: password)),
+                              name: name, number: number,email:email
+                          )),
                     );
                   },
                   child: Text(

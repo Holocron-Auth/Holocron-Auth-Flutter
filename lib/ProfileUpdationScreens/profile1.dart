@@ -32,12 +32,14 @@ DateTime _currentDate = DateTime.now();
 class profileScreen1 extends StatefulWidget {
   final String name;
   final String number;
+  final String email;
   final void Function(String) onSave;
 
   const profileScreen1({
     Key? key,
     required this.name,
     required this.number,
+    required this.email,
     required this.onSave,
   }) : super(key: key);
   @override
@@ -85,6 +87,7 @@ class profileScreen1State extends State<profileScreen1> {
   bool _isEditing3 = false;
   bool isExpanded = false;
   bool isExpanded2 = false;
+  bool isExpanded3 = false;
   TextEditingController _otpcontroller1 = TextEditingController(text: '');
   late TextEditingController _otpcontroller2;
   String _otpCode = '';
@@ -96,6 +99,7 @@ class profileScreen1State extends State<profileScreen1> {
   Timer? _resendOtpTimer;
   String? _selectedValue;
   String? _selectedValue2;
+
 
   void _startResendOtpTimer() {
     setState(() {
@@ -124,7 +128,7 @@ class profileScreen1State extends State<profileScreen1> {
     _resendOtpTimer?.cancel();
   }
 
-  void _collapseTile() {
+  void _collapseTile(isExpanded) {
     setState(() {
       isExpanded = false;
     });
@@ -135,8 +139,8 @@ class profileScreen1State extends State<profileScreen1> {
   /// This decides which day will be enabled
   /// This will be called every time while displaying day in calender.
   bool _decideWhichDayToEnable(DateTime day) {
-    if ((day.isAfter(DateTime.now().subtract(Duration(days: 1))) &&
-        day.isBefore(DateTime.now().add(Duration(days: 10))))) {
+    if ((day.isAfter(DateTime.now().subtract(Duration(days: 365000))) &&
+        day.isBefore(DateTime.now().add(Duration(days: 1))))) {
       return true;
     }
     return false;
@@ -222,7 +226,7 @@ class profileScreen1State extends State<profileScreen1> {
     super.initState();
     _controller = TextEditingController(text: widget.name);
     _controller2 = TextEditingController(text: widget.number);
-    _controller3 = TextEditingController();
+    _controller3 = TextEditingController(text: widget.email);
     _controller4 = TextEditingController();
     _controller5 = TextEditingController();
     _controller6 = TextEditingController();
@@ -380,7 +384,8 @@ class profileScreen1State extends State<profileScreen1> {
                       // backgroundColor: Color(0xff535252),
                       backgroundColor: Colors.black,
                       leading: null,
-                      trailing: Icon(Icons.arrow_forward_rounded),
+                      // trailing: Icon(Icons.arrow_forward_rounded),
+                      trailing: Icon(Icons.keyboard_arrow_down_rounded),
                       iconColor: Colors.white,
                       collapsedIconColor: Colors.white,
                       collapsedBackgroundColor: Color(0xff2B2B2B),
@@ -616,324 +621,332 @@ class profileScreen1State extends State<profileScreen1> {
                                         if (value == null || value.isEmpty) {
                                           return 'Please enter your Email ID';
                                         }
-                                        return null;
-                                      },
+                                        // else if (isEmailValid(value) == false) {
+                                        //   return 'Please enter a valid Email ID';
+                                        // }
+                                      }
                                     ),
                                   ),
                                 ),
                                 IconButton(
-                                    onPressed: () {
-                                      // _toggleEditMode3;
-                                      //validate the formkey
-                                      if (_formKey4.currentState!.validate()) {
-                                        showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) => Container(
-                                                height: 0.1 * height,
-                                                width: 0.3 * width,
-                                                decoration: BoxDecoration(
-                                                  color: Color(0xff2B2B2B),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                ),
-                                                margin: EdgeInsets.only(
-                                                    top: 0.3 * height,
-                                                    bottom: 0.22 * height,
-                                                    left: 0.1 * width,
-                                                    right: 0.1 * width),
-                                                child: Column(children: [
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xff2B2B2B),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.0),
-                                                      border: Border.all(
-                                                        // color: isExpanded ?Colors.orange : Colors.transparent,
-                                                        color: Colors.orange,
-                                                        width: 1.0,
-                                                      ),
-                                                    ),
-                                                    margin: EdgeInsets.only(
-                                                        top: 0.04 * height),
-                                                    padding: EdgeInsets.only(
-                                                        top: 0.02 * height,
-                                                        bottom: 0.02 * height,
-                                                        left: 0.02 * width,
-                                                        right: 0.02 * width),
-                                                    child: Text(
-                                                        '${_controller3.text}',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.orange,
-                                                            fontSize: 18)),
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        top: 0.02 * height,
-                                                        right: 0.335 * width,
-                                                        left: 0.02 * width),
-                                                    child: Text(
-                                                        'OTP sent to your email ID successfully',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.orange,
-                                                            fontSize: 12)),
-                                                  ),
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                        top: 0.02 * height,
-                                                        right: 0.55 * width,
-                                                        left: 0.02 * width),
-                                                    child: Text('ENTER OTP',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.orange,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500)),
-                                                  ),
-                                                  Card(
-                                                    color: Color(0xff2B2B2B),
-                                                    margin: EdgeInsets.only(
-                                                        top: 0.04 * height),
-                                                    child: PinCodeTextField(
-                                                      autofocus: true,
-                                                      controller:
-                                                          _otpcontroller1,
-                                                      // hideCharacter: true,
-                                                      highlight: true,
-                                                      highlightColor:
-                                                          Colors.orange,
-                                                      defaultBorderColor:
-                                                          Colors.white,
-                                                      hasTextBorderColor:
-                                                          Colors.white,
-                                                      highlightPinBoxColor:
-                                                          Colors.black,
-                                                      // highlightPinBoxColor: Color(0xff2B2B2B),
-                                                      maxLength: 6,
-                                                      onTextChanged: (text) {
-                                                        setState(() {
-                                                          hasError = false;
-                                                        });
-                                                      },
-                                                      onDone: (text) {
-                                                        print("DONE $text");
-                                                      },
-
-                                                      pinBoxWidth: 40,
-
-                                                      pinBoxHeight: 50,
-                                                      pinBoxRadius: 5,
-                                                      pinBoxBorderWidth: 2,
-                                                      hasUnderline: true,
-                                                      wrapAlignment:
-                                                          WrapAlignment
-                                                              .spaceAround,
-                                                      //underline color
-
-                                                      pinBoxColor:
-                                                          Color(0xff2B2B2B),
-                                                      pinTextStyle: TextStyle(
-                                                          fontSize: 20.0,
-                                                          color: Colors.white),
-                                                      hasError: hasError,
-                                                      // cursorColor: Colors.black,
-                                                      keyboardType:
-                                                          TextInputType.number,
-                                                      // appContext: context,
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    child: Text(
-                                                      "Wrong PIN!",
-                                                    ),
-                                                    visible: hasError,
-                                                  ),
-                                                  Container(
-                                                      margin: EdgeInsets.only(
-                                                          left: 0.45 * width),
-                                                      child: TextButton(
-                                                        onPressed: () {
-                                                          // Do something when the button is pressed
-                                                        },
-                                                        child: Text(
-                                                            'Resend OTP($_timerCountdown s)',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.orange,
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                            )),
-                                                      )),
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Container(
-                                                            width: 0.37 * width,
-                                                            height: 0.075 *
-                                                                height,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    top: 0.03 *
-                                                                        height,
-                                                                    bottom: 0.01 *
-                                                                        height,
-                                                                    left: 0.02 *
-                                                                        width),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            16.0),
-                                                                    gradient:
-                                                                        const LinearGradient(
-                                                                      colors: [
-                                                                        Colors
-                                                                            .orange,
-                                                                        Colors
-                                                                            .deepOrange
-                                                                      ],
-                                                                      begin: Alignment
-                                                                          .topCenter,
-                                                                      end: Alignment
-                                                                          .bottomCenter,
-                                                                      stops: [
-                                                                        0.1,
-                                                                        0.9
-                                                                      ],
-                                                                      tileMode:
-                                                                          TileMode
-                                                                              .repeated,
-                                                                    )),
-                                                            child:
-                                                                ElevatedButton(
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                              },
-                                                              child: Text(
-                                                                'Cancel',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        17,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500),
-                                                              ),
-                                                              style:
-                                                                  ElevatedButton
-                                                                      .styleFrom(
-                                                                primary: Colors
-                                                                    .transparent,
-
-                                                                shadowColor: Colors
-                                                                    .transparent,
-                                                                // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
-
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0),
-                                                                ),
-                                                              ),
-                                                            )),
-                                                        Container(
-                                                            width: 0.37 * width,
-                                                            height:
-                                                                0.075 * height,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    top: 0.03 *
-                                                                        height,
-                                                                    bottom: 0.01 *
-                                                                        height,
-                                                                    right: 0.02 *
-                                                                        width),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            16.0),
-                                                                    gradient:
-                                                                        const LinearGradient(
-                                                                      colors: [
-                                                                        Colors
-                                                                            .orange,
-                                                                        Colors
-                                                                            .deepOrange
-                                                                      ],
-                                                                      begin: Alignment
-                                                                          .topCenter,
-                                                                      end: Alignment
-                                                                          .bottomCenter,
-                                                                      stops: [
-                                                                        0.1,
-                                                                        0.9
-                                                                      ],
-                                                                      tileMode:
-                                                                          TileMode
-                                                                              .repeated,
-                                                                    )),
-                                                            child:
-                                                                ElevatedButton(
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                                //  OTP Verification Logic
-                                                              },
-                                                              child: Text(
-                                                                'Verify',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        17,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500),
-                                                              ),
-                                                              style:
-                                                                  ElevatedButton
-                                                                      .styleFrom(
-                                                                primary: Colors
-                                                                    .transparent,
-
-                                                                shadowColor: Colors
-                                                                    .transparent,
-                                                                // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
-
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0),
-                                                                ),
-                                                              ),
-                                                            )),
-                                                      ]),
-                                                ])));
-                                      }
-                                    },
-                                    icon:
-                                        Icon(Icons.done, color: Colors.orange)),
+                                  onPressed: _toggleEditMode3,
+                                  icon: _isEditing3
+                                      ? Icon(Icons.done, color: Colors.orange)
+                                      : Icon(Icons.edit, color: Colors.orange),
+                                ),
+                                // IconButton(
+                                //     onPressed: () {
+                                //       // _toggleEditMode3;
+                                //       //validate the formkey
+                                //       if (_formKey4.currentState!.validate()) {
+                                //         showDialog(
+                                //             context: context,
+                                //             barrierDismissible: false,
+                                //             builder: (context) => Container(
+                                //                 height: 0.1 * height,
+                                //                 width: 0.3 * width,
+                                //                 decoration: BoxDecoration(
+                                //                   color: Color(0xff2B2B2B),
+                                //                   borderRadius:
+                                //                       BorderRadius.circular(
+                                //                           20.0),
+                                //                 ),
+                                //                 margin: EdgeInsets.only(
+                                //                     top: 0.3 * height,
+                                //                     bottom: 0.22 * height,
+                                //                     left: 0.1 * width,
+                                //                     right: 0.1 * width),
+                                //                 child: Column(children: [
+                                //                   Container(
+                                //                     decoration: BoxDecoration(
+                                //                       color: Color(0xff2B2B2B),
+                                //                       borderRadius:
+                                //                           BorderRadius.circular(
+                                //                               20.0),
+                                //                       border: Border.all(
+                                //                         // color: isExpanded ?Colors.orange : Colors.transparent,
+                                //                         color: Colors.orange,
+                                //                         width: 1.0,
+                                //                       ),
+                                //                     ),
+                                //                     margin: EdgeInsets.only(
+                                //                         top: 0.04 * height),
+                                //                     padding: EdgeInsets.only(
+                                //                         top: 0.02 * height,
+                                //                         bottom: 0.02 * height,
+                                //                         left: 0.02 * width,
+                                //                         right: 0.02 * width),
+                                //                     child: Text(
+                                //                         '${_controller3.text}',
+                                //                         style: TextStyle(
+                                //                             color:
+                                //                                 Colors.orange,
+                                //                             fontSize: 18)),
+                                //                   ),
+                                //                   Container(
+                                //                     margin: EdgeInsets.only(
+                                //                         top: 0.02 * height,
+                                //                         right: 0.335 * width,
+                                //                         left: 0.02 * width),
+                                //                     child: Text(
+                                //                         'OTP sent to your email ID successfully',
+                                //                         style: TextStyle(
+                                //                             color:
+                                //                                 Colors.orange,
+                                //                             fontSize: 12)),
+                                //                   ),
+                                //                   Container(
+                                //                     margin: EdgeInsets.only(
+                                //                         top: 0.02 * height,
+                                //                         right: 0.55 * width,
+                                //                         left: 0.02 * width),
+                                //                     child: Text('ENTER OTP',
+                                //                         style: TextStyle(
+                                //                             color:
+                                //                                 Colors.orange,
+                                //                             fontSize: 16,
+                                //                             fontWeight:
+                                //                                 FontWeight
+                                //                                     .w500)),
+                                //                   ),
+                                //                   Card(
+                                //                     color: Color(0xff2B2B2B),
+                                //                     margin: EdgeInsets.only(
+                                //                         top: 0.04 * height),
+                                //                     child: PinCodeTextField(
+                                //                       autofocus: true,
+                                //                       controller:
+                                //                           _otpcontroller1,
+                                //                       // hideCharacter: true,
+                                //                       highlight: true,
+                                //                       highlightColor:
+                                //                           Colors.orange,
+                                //                       defaultBorderColor:
+                                //                           Colors.white,
+                                //                       hasTextBorderColor:
+                                //                           Colors.white,
+                                //                       highlightPinBoxColor:
+                                //                           Colors.black,
+                                //                       // highlightPinBoxColor: Color(0xff2B2B2B),
+                                //                       maxLength: 6,
+                                //                       onTextChanged: (text) {
+                                //                         setState(() {
+                                //                           hasError = false;
+                                //                         });
+                                //                       },
+                                //                       onDone: (text) {
+                                //                         print("DONE $text");
+                                //                       },
+                                //
+                                //                       pinBoxWidth: 40,
+                                //
+                                //                       pinBoxHeight: 50,
+                                //                       pinBoxRadius: 5,
+                                //                       pinBoxBorderWidth: 2,
+                                //                       hasUnderline: true,
+                                //                       wrapAlignment:
+                                //                           WrapAlignment
+                                //                               .spaceAround,
+                                //                       //underline color
+                                //
+                                //                       pinBoxColor:
+                                //                           Color(0xff2B2B2B),
+                                //                       pinTextStyle: TextStyle(
+                                //                           fontSize: 20.0,
+                                //                           color: Colors.white),
+                                //                       hasError: hasError,
+                                //                       // cursorColor: Colors.black,
+                                //                       keyboardType:
+                                //                           TextInputType.number,
+                                //                       // appContext: context,
+                                //                     ),
+                                //                   ),
+                                //                   Visibility(
+                                //                     child: Text(
+                                //                       "Wrong PIN!",
+                                //                     ),
+                                //                     visible: hasError,
+                                //                   ),
+                                //                   Container(
+                                //                       margin: EdgeInsets.only(
+                                //                           left: 0.45 * width),
+                                //                       child: TextButton(
+                                //                         onPressed: () {
+                                //                           // Do something when the button is pressed
+                                //                         },
+                                //                         child: Text(
+                                //                             'Resend OTP($_timerCountdown s)',
+                                //                             textAlign: TextAlign
+                                //                                 .center,
+                                //                             style: TextStyle(
+                                //                               color:
+                                //                                   Colors.orange,
+                                //                               fontSize: 12,
+                                //                               fontWeight:
+                                //                                   FontWeight
+                                //                                       .w400,
+                                //                             )),
+                                //                       )),
+                                //                   Row(
+                                //                       mainAxisAlignment:
+                                //                           MainAxisAlignment
+                                //                               .spaceBetween,
+                                //                       children: [
+                                //                         Container(
+                                //                             width: 0.37 * width,
+                                //                             height: 0.075 *
+                                //                                 height,
+                                //                             margin:
+                                //                                 EdgeInsets.only(
+                                //                                     top: 0.03 *
+                                //                                         height,
+                                //                                     bottom: 0.01 *
+                                //                                         height,
+                                //                                     left: 0.02 *
+                                //                                         width),
+                                //                             decoration:
+                                //                                 BoxDecoration(
+                                //                                     borderRadius:
+                                //                                         BorderRadius.circular(
+                                //                                             16.0),
+                                //                                     gradient:
+                                //                                         const LinearGradient(
+                                //                                       colors: [
+                                //                                         Colors
+                                //                                             .orange,
+                                //                                         Colors
+                                //                                             .deepOrange
+                                //                                       ],
+                                //                                       begin: Alignment
+                                //                                           .topCenter,
+                                //                                       end: Alignment
+                                //                                           .bottomCenter,
+                                //                                       stops: [
+                                //                                         0.1,
+                                //                                         0.9
+                                //                                       ],
+                                //                                       tileMode:
+                                //                                           TileMode
+                                //                                               .repeated,
+                                //                                     )),
+                                //                             child:
+                                //                                 ElevatedButton(
+                                //                               onPressed: () {
+                                //                                 Navigator.of(
+                                //                                         context)
+                                //                                     .pop();
+                                //                               },
+                                //                               child: Text(
+                                //                                 'Cancel',
+                                //                                 style: TextStyle(
+                                //                                     color: Colors
+                                //                                         .black,
+                                //                                     fontSize:
+                                //                                         17,
+                                //                                     fontWeight:
+                                //                                         FontWeight
+                                //                                             .w500),
+                                //                               ),
+                                //                               style:
+                                //                                   ElevatedButton
+                                //                                       .styleFrom(
+                                //                                 primary: Colors
+                                //                                     .transparent,
+                                //
+                                //                                 shadowColor: Colors
+                                //                                     .transparent,
+                                //                                 // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
+                                //
+                                //                                 shape:
+                                //                                     RoundedRectangleBorder(
+                                //                                   borderRadius:
+                                //                                       BorderRadius
+                                //                                           .circular(
+                                //                                               10.0),
+                                //                                 ),
+                                //                               ),
+                                //                             )),
+                                //                         Container(
+                                //                             width: 0.37 * width,
+                                //                             height:
+                                //                                 0.075 * height,
+                                //                             margin:
+                                //                                 EdgeInsets.only(
+                                //                                     top: 0.03 *
+                                //                                         height,
+                                //                                     bottom: 0.01 *
+                                //                                         height,
+                                //                                     right: 0.02 *
+                                //                                         width),
+                                //                             decoration:
+                                //                                 BoxDecoration(
+                                //                                     borderRadius:
+                                //                                         BorderRadius.circular(
+                                //                                             16.0),
+                                //                                     gradient:
+                                //                                         const LinearGradient(
+                                //                                       colors: [
+                                //                                         Colors
+                                //                                             .orange,
+                                //                                         Colors
+                                //                                             .deepOrange
+                                //                                       ],
+                                //                                       begin: Alignment
+                                //                                           .topCenter,
+                                //                                       end: Alignment
+                                //                                           .bottomCenter,
+                                //                                       stops: [
+                                //                                         0.1,
+                                //                                         0.9
+                                //                                       ],
+                                //                                       tileMode:
+                                //                                           TileMode
+                                //                                               .repeated,
+                                //                                     )),
+                                //                             child:
+                                //                                 ElevatedButton(
+                                //                               onPressed: () {
+                                //                                 Navigator.of(
+                                //                                         context)
+                                //                                     .pop();
+                                //                                 //  OTP Verification Logic
+                                //                               },
+                                //                               child: Text(
+                                //                                 'Verify',
+                                //                                 style: TextStyle(
+                                //                                     color: Colors
+                                //                                         .black,
+                                //                                     fontSize:
+                                //                                         17,
+                                //                                     fontWeight:
+                                //                                         FontWeight
+                                //                                             .w500),
+                                //                               ),
+                                //                               style:
+                                //                                   ElevatedButton
+                                //                                       .styleFrom(
+                                //                                 primary: Colors
+                                //                                     .transparent,
+                                //
+                                //                                 shadowColor: Colors
+                                //                                     .transparent,
+                                //                                 // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
+                                //
+                                //                                 shape:
+                                //                                     RoundedRectangleBorder(
+                                //                                   borderRadius:
+                                //                                       BorderRadius
+                                //                                           .circular(
+                                //                                               10.0),
+                                //                                 ),
+                                //                               ),
+                                //                             )),
+                                //                       ]),
+                                //                 ])));
+                                //       }
+                                //     },
+                                //     icon:
+                                //         Icon(Icons.done, color: Colors.orange)),
                               ],
                             )),
                         Container(
@@ -1022,7 +1035,7 @@ class profileScreen1State extends State<profileScreen1> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text('Processing Data')));
-                                  _collapseTile();
+                                  _collapseTile(isExpanded);
                                   setState(() {
                                     _currentProgress = 40;
                                   });
@@ -1072,16 +1085,17 @@ class profileScreen1State extends State<profileScreen1> {
                       child: customExpansionTile(
                         // borderColor: Colors.transparent,
                         onExpansionChanged: (bool expanded) {
-                          isExpanded = expanded;
+                          isExpanded2 = expanded;
                           print(isExpanded);
                           borderColor =
-                              isExpanded ? Colors.orange : Colors.transparent;
+                              isExpanded2 ? Colors.orange : Colors.transparent;
                         },
-                        initiallyExpanded: isExpanded,
+                        initiallyExpanded: isExpanded2,
                         // backgroundColor: Color(0xff535252),
                         backgroundColor: Colors.black,
                         leading: null,
-                        trailing: Icon(Icons.arrow_forward_rounded),
+                        // trailing: Icon(Icons.arrow_forward_rounded),
+                        trailing: Icon(Icons.keyboard_arrow_down_rounded),
                         iconColor: Colors.white,
                         collapsedIconColor: Colors.white,
                         collapsedBackgroundColor: Color(0xff2B2B2B),
@@ -1095,8 +1109,6 @@ class profileScreen1State extends State<profileScreen1> {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
-                        // borderSide: BorderSide(color: Colors.white),
-
                         children: [
                           Container(
                               margin: EdgeInsets.only(
@@ -1379,8 +1391,8 @@ class profileScreen1State extends State<profileScreen1> {
                                   )),
                               child: ElevatedButton(
                                 onPressed: () {
+                                  _collapseTile(isExpanded2);
                                   //  count the number of non null formKeys in this expansion tile as all aren't compulaory fields
-
                                   int count = 0;
                                 },
                                 child: Text(
@@ -1425,16 +1437,17 @@ class profileScreen1State extends State<profileScreen1> {
                       child: customExpansionTile(
                         // borderColor: Colors.transparent,
                         onExpansionChanged: (bool expanded) {
-                          isExpanded = expanded;
-                          print(isExpanded);
+                          isExpanded3 = expanded;
+                          print(isExpanded3);
                           borderColor =
-                              isExpanded ? Colors.orange : Colors.transparent;
+                              isExpanded3 ? Colors.orange : Colors.transparent;
                         },
-                        initiallyExpanded: isExpanded,
+                        initiallyExpanded: isExpanded3,
                         // backgroundColor: Color(0xff535252),
                         backgroundColor: Colors.black,
                         leading: null,
-                        trailing: Icon(Icons.arrow_forward_rounded),
+                        // trailing: Icon(Icons.arrow_forward_rounded),
+                        trailing: Icon(Icons.keyboard_arrow_down_rounded),
                         iconColor: Colors.white,
                         collapsedIconColor: Colors.white,
                         collapsedBackgroundColor: Color(0xff2B2B2B),
@@ -1622,6 +1635,7 @@ class profileScreen1State extends State<profileScreen1> {
                                       print("no2");
                                     }
                                   }
+                                  _collapseTile(isExpanded3);
                                 },
                                 child: Text(
                                   'Save and Proceed',
@@ -1717,6 +1731,7 @@ class profileScreen1State extends State<profileScreen1> {
                                     homeScreen1(
                                       name: widget.name,
                                       number: widget.number,
+                                      email: email,
                                       image: image,
                                     )),
                           );

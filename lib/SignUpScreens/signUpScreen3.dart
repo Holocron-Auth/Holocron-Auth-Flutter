@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import '../LoginScreens/loginScreen1.dart';
 import '../SignUpScreens/signUpScreen1.dart';
 import '../ProfileUpdationScreens/profile1.dart';
+import '../ProfileUpdationScreens/profile2.dart';
 
 class signUpScreen3 extends StatelessWidget {
   final String name;
   final String number;
-  final String password;
+  final String email;
 
   const signUpScreen3(
       {Key? key,
       required this.name,
       required this.number,
-      required this.password})
+      required this.email
+      })
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -91,14 +93,17 @@ class signUpScreen3 extends StatelessWidget {
 
                     // String name = widget.name;
                     // String number = widget.number;
-                    // String password = widget.password;
-
+                    // String email = widget.email;
+                    print(name);
+                    print(number);
+                    print(email);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => profileScreen1(
+                          builder: (context) => profileScreen2(
                               name: name,
                               number: number,
+                              email: email,
                               onSave: (value) {
                                 print(value);
                               })),

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import '../LoginScreens/loginScreen1.dart';
 import '../SignUpScreens/signUpScreen2.dart';
+import 'package:email_validator/email_validator.dart';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:mobile_number/mobile_number.dart';
 
 final _formKey = GlobalKey<FormState>();
 final _formKey1 = GlobalKey<FormState>();
 final _formKey2 = GlobalKey<FormState>();
 
-final name = TextEditingController();
-final mobileNo = TextEditingController();
-final password = TextEditingController();
+// final name = TextEditingController();
+// final mobileNo = TextEditingController();
+// final email = TextEditingController();
 
 bool _isPasswordVisible = false;
 
@@ -21,6 +26,8 @@ class signUpScreen1State extends State<signUpScreen1> {
   late TextEditingController _controller;
   late TextEditingController _controller2;
   late TextEditingController _controller3;
+  String _mobileNumber = '';
+  List<SimCard> _simCard = <SimCard>[];
 
   @override
   void dispose() {
@@ -35,14 +42,39 @@ class signUpScreen1State extends State<signUpScreen1> {
     _controller = TextEditingController();
     _controller2 = TextEditingController();
     _controller3 = TextEditingController();
+    MobileNumber.listenPhonePermission((isPermissionGranted) {
+      if (isPermissionGranted) {
+        initMobileNumberState();
+      } else {}
+    });
+
+    initMobileNumberState();
   }
 
-  @override
-  bool validateStructure(String value) {
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = new RegExp(pattern);
-    return regExp.hasMatch(value);
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initMobileNumberState() async {
+    if (!await MobileNumber.hasPhonePermission) {
+      await MobileNumber.requestPhonePermission;
+      return;
+    }
+    String mobileNumber = '';
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      mobileNumber = (await MobileNumber.mobileNumber)!;
+      _simCard = (await MobileNumber.getSimCards)!;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get mobile number because of '${e.message}'");
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _mobileNumber = mobileNumber;
+    });
   }
 
   @override
@@ -136,7 +168,7 @@ class signUpScreen1State extends State<signUpScreen1> {
                           children: [
                             Expanded(
                               child: Form(
-                                key: _formKey1,
+                                key: _formKey2,
                                 child: TextFormField(
                                   controller: _controller2,
                                   decoration: InputDecoration(
@@ -160,6 +192,9 @@ class signUpScreen1State extends State<signUpScreen1> {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter your mobile number';
                                     }
+                                    else if(value.length != 10){
+                                      return 'Please enter a valid mobile number';
+                                    }
                                     return null;
                                   },
                                 ),
@@ -167,6 +202,7 @@ class signUpScreen1State extends State<signUpScreen1> {
                             ),
                           ],
                         )),
+
                     Container(
                         decoration: BoxDecoration(
                           color: Color(0xff2B2B2B),
@@ -186,31 +222,10 @@ class signUpScreen1State extends State<signUpScreen1> {
                           children: [
                             Expanded(
                               child: Form(
-                                key: _formKey2,
+                                key: _formKey1,
                                 child: TextFormField(
                                   controller: _controller3,
-                                  obscureText: !_isPasswordVisible,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter a Password';
-                                    } else if (!validateStructure(value)) {
-                                      return 'Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character';
-                                    }
-                                  },
                                   decoration: InputDecoration(
-                                    suffixIcon: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _isPasswordVisible =
-                                              !_isPasswordVisible;
-                                        });
-                                      },
-                                      child: Icon(
-                                        _isPasswordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                      ),
-                                    ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -224,9 +239,18 @@ class signUpScreen1State extends State<signUpScreen1> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     errorStyle: TextStyle(color: Colors.orange),
-                                    hintText: 'Password',
+                                    hintText: 'Email',
                                     hintStyle: TextStyle(color: Colors.orange),
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your Email Address';
+                                    }
+                                    else if (EmailValidator.validate(value) == false) {
+                                      return 'Please enter a valid email address';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                             ),
@@ -248,26 +272,48 @@ class signUpScreen1State extends State<signUpScreen1> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate() &&
-                                _formKey1.currentState!.validate() &&
-                                _formKey2.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              _formKey1.currentState!.save();
-                              _formKey2.currentState!.save();
+                                _formKey1.currentState!.validate()) {
+
+                              String name = _controller.text;
+                              String mobile = _controller2.text;
+                              String email = _controller3.text;
+                              String mobile2= '91+91' + '$mobile';
+                              String last10 = _mobileNumber.substring(_mobileNumber.length - 10);
+                              if(mobile  != last10){
+                                print(mobile);
+                                print(last10);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content : Column(children:[
+
+                                      Text("The phone number that you've entered isn't the same as the you've entered in the field above\n Please enter the phone number registered with your Sim Card "),
+
+                                    ]),
+                                    duration: Duration(seconds: 2),
+
+                                  ),
+                                );
+                              }
+                              else {
+                                _formKey.currentState!.save();
+                                _formKey1.currentState!.save();
+                                _formKey2.currentState!.save();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          signUpScreenState2(
+                                              name: name,
+                                              number: mobile,
+                                              email: email,
+                                              // password: password,
+                                              onSave: (value) {
+                                                print(value);
+                                              })),
+                                );
+                              }
                             }
-                            String name = _controller.text;
-                            String mobile = _controller2.text;
-                            String password = _controller3.text;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => signUpScreenState2(
-                                      name: name,
-                                      number: mobile,
-                                      password: password,
-                                      onSave: (value) {
-                                        print(value);
-                                      })),
-                            );
+
                           },
                           child: Text(
                             'Request OTP',

@@ -8,12 +8,14 @@ import '../tips.dart';
 class homeScreen1 extends StatefulWidget {
   final String name;
   final String number;
+  final String email;
   final File? image;
 
   const homeScreen1({
     Key? key,
     required this.name,
     required this.number,
+    required this.email,
     this.image,
   }) : super(key: key);
   @override
@@ -103,11 +105,17 @@ class homeScreen1State extends State<homeScreen1> {
                     child: GestureDetector(
                       onTap: () {
                         // Navigate to profile screen
+                        File _image = widget.image ?? File('assets/Change.png');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => profileScreen(),
+                            builder: (context) => profileScreen1(name: widget.name, number: widget.number, email:widget.email, image: _image, onSave: (value) {
+                              setState(() {
+                                print(value);
+                              });
+                            },
                           ),
+                        )
                         );
                       },
                       child: CircleAvatar(
@@ -441,7 +449,6 @@ class homeScreen1State extends State<homeScreen1> {
                 )),
             Container(
                 width: 0.95 * width,
-                height: 0.55 * height,
                 margin: EdgeInsets.only(top: 0.02 * height),
                 decoration: BoxDecoration(
                   color: Color(0xff2E2E2E),
@@ -464,19 +471,58 @@ class homeScreen1State extends State<homeScreen1> {
                         ),
                       ),
                     ),
-                    Container(
-                        margin: EdgeInsets.only(
-                            top: 0.005 * height,
-                            right: 0.01 * width,
-                            left: 0.01 * width),
-                        child: Text(
-                          'You have used Holocron to log into $dashno1 Services',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        )),
+
+          //           if(dashno1!=0)return Container(
+          //   margin: EdgeInsets.only(
+          //     top: 0.02 * height,
+          //     right: 0.01 * width,
+          //     left: 0.01 * width,
+          //
+          //   ),
+          //   child: Text(
+          //     'You have used Holocron to log into $dashno1 Services'
+          //     style: TextStyle(
+          //       color: Colors.white,
+          //       fontSize: 16,
+          //       fontWeight: FontWeight.w400,
+          //     ),
+          //   ),
+          // )
+
+                    //
+                    //
+                    // if(dashno1!=0){
+                    //   return Container(
+                    //     margin: EdgeInsets.only(
+                    //       top: 0.02 * height,
+                    //       right: 0.01 * width,
+                    //       left: 0.01 * width,
+                    //
+                    //     ),
+                    //     child: Text(
+                    //       'You have used Holocron to log into $dashno1 Services'
+                    //       style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontSize: 16,
+                    //         fontWeight: FontWeight.w400,
+                    //       ),
+                    //     ),
+                    //   )
+                    // }else{
+                    //   return
+                    //   Container(
+                    //     margin: EdgeInsets.only(
+                    //         top: 0.02 * height,
+                    //         right: 0.01 * width,
+                    //         left: 0.01 * width,
+                    //     ),
+                    //     child: Text(
+                    //       'Set up Holocron to start logging into your services',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.w400,),
+                    //     ),
+                    //   ),
+                    // }
+                    //
+
                     Container(
                       height: 0.05 * height,
                       width: 0.25 * width,
