@@ -6,6 +6,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
+import 'package:flutter_curl/flutter_curl.dart';
+import 'package:http/http.dart' as http;
 
 final _formKey = GlobalKey<FormState>();
 final _formKey1 = GlobalKey<FormState>();
@@ -49,6 +51,29 @@ class signUpScreen1State extends State<signUpScreen1> {
     });
 
     initMobileNumberState();
+  }
+
+
+
+  Future<String> generateOTP(String phone) async {
+    var headers = {
+      'ngrok-skip-browser-warning': '1',
+      'Content-Type': 'application/json',
+    };
+
+    var data = '{"json": {"phone": "$phone"}}';
+
+    var url = Uri.parse('https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.generateOTPWithPhone');
+    var res = await http.post(url, headers: headers, body: data);
+    print(res.body);
+    if (res.statusCode != 200) {
+      // throw Exception('http.post error: statusCode= ${res.statusCode}');
+      return 'Error Moving forward';
+    }
+    else{
+      return 'Success';
+    }
+    print(res.body);
   }
 
 
@@ -270,7 +295,7 @@ class signUpScreen1State extends State<signUpScreen1> {
                               tileMode: TileMode.repeated,
                             )),
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate() &&
                                 _formKey1.currentState!.validate()) {
 
@@ -284,11 +309,11 @@ class signUpScreen1State extends State<signUpScreen1> {
                                 print(last10);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content : Column(children:[
+                                    content :
 
                                       Text("The phone number that you've entered isn't the same as the you've entered in the field above\n Please enter the phone number registered with your Sim Card "),
 
-                                    ]),
+
                                     duration: Duration(seconds: 2),
 
                                   ),
@@ -298,19 +323,37 @@ class signUpScreen1State extends State<signUpScreen1> {
                                 _formKey.currentState!.save();
                                 _formKey1.currentState!.save();
                                 _formKey2.currentState!.save();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          signUpScreenState2(
-                                              name: name,
-                                              number: mobile,
-                                              email: email,
-                                              // password: password,
-                                              onSave: (value) {
-                                                print(value);
-                                              })),
-                                );
+                                //uncomment the below line when pushing
+                                String response = await generateOTP(last10);
+                                print(response);
+                                if(response == "error"){
+                                  print('In here');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content :
+
+                                        Text("Please check your internet connection or try again later"),
+
+                                      duration: Duration(seconds: 2),
+
+                                    ),
+                                  );
+                                }
+                                else if(response == "Success"){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            signUpScreenState2(
+                                                name: name,
+                                                number: mobile,
+                                                email: email,
+                                                // password: password,
+                                                onSave: (value) {
+                                                  print(value);
+                                                })),
+                                  );
+                                }
                               }
                             }
 
@@ -349,6 +392,7 @@ class signUpScreen1State extends State<signUpScreen1> {
                             child: TextButton(
                               onPressed: () {
                                 // Do something when the button is pressed
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

@@ -3,6 +3,10 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'dart:async';
 import '../LoginScreens/loginScreen1.dart';
 import '../SignUpScreens/signUpScreen3.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../SignUpScreens/registrationresponse.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class signUpScreenState2 extends StatefulWidget {
   final String name;
@@ -29,7 +33,7 @@ class signUpScreen2 extends State<signUpScreenState2> {
   late String mobileNumber;
   bool hasError = false;
   String errorMessage = "";
-  int _timerCountdown = 60;
+  int _timerCountdown = 120;
   bool _isTimerRunning = false;
   Timer? _resendOtpTimer;
   bool isChecked = false;
@@ -55,7 +59,7 @@ class signUpScreen2 extends State<signUpScreenState2> {
 
   void _resetResendOtpTimer() {
     setState(() {
-      _timerCountdown = 60;
+      _timerCountdown = 120;
       _isTimerRunning = false;
     });
     _resendOtpTimer?.cancel();
@@ -65,6 +69,19 @@ class signUpScreen2 extends State<signUpScreenState2> {
   void dispose() {
     _resendOtpTimer?.cancel();
     super.dispose();
+  }
+
+  late SharedPreferences pref_login;
+
+  void initShareddPref() async {
+    pref_login = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initShareddPref();
+    _startResendOtpTimer();
   }
 
   @override
@@ -145,45 +162,8 @@ class signUpScreen2 extends State<signUpScreenState2> {
                 // appContext: context,
               ),
             ),
-            Visibility(
-              child: Text(
-                "Wrong PIN!",
-              ),
-              visible: hasError,
-            ),
 
             Row(children: [
-              //create a checkbox to keep you logged in
-              Row(
-                children: [
-                  Container(
-                    margin:
-                        EdgeInsets.only(top: 0.02 * height, left: 0.06 * width),
-                    child: Checkbox(
-                      value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = value!;
-                        });
-                      },
-                      checkColor: Colors.white,
-                      fillColor: MaterialStateProperty.resolveWith(getColor),
-                      activeColor: Colors.orange,
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        top: 0.02 * height, right: 0.15 * width),
-                    child: Text(
-                      'Keep me logged in',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              ),
               Container(
                   margin:
                       EdgeInsets.only(top: 0.02 * height, left: 0.05 * width),
@@ -215,19 +195,76 @@ class signUpScreen2 extends State<signUpScreenState2> {
                       tileMode: TileMode.repeated,
                     )),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     String name = widget.name;
                     String number = widget.number;
                     String email = widget.email;
-
-                    // Do something when the button is pressed
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => signUpScreen3(
-                              name: name, number: number,email:email
-                          )),
-                    );
+                    print(_controller1.text);
+                    if (_controller1.text.length == 6) {
+                      var response = await RegistrationResponse.registerUser(
+                          email, number, name, _controller1.text);
+                      print("Here's the response!!!!!!!");
+                      print(response);
+                      var JWT = response.jwt;
+                      print("Here's the JWT!!!!!!!");
+                      print(JWT);
+                      print(response.message);
+                      print("Storing in this secure place");
+                      pref_login.setString('JWT', JWT);
+                      print("Successfully stored on the secure ass place");
+                      print('Original JWT: $JWT');
+                      if (response.message == 'User registered successfully') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => signUpScreen3(
+                                    name: name,
+                                    number: number,
+                                    email: email,
+                                    jwt: response.jwt,
+                                  )),
+                        );
+                      } else if (response.message == "Invalid OTP") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Invalid OTP",
+                              style: TextStyle(
+                                  color: Colors.orange,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Error registering user",
+                              style: TextStyle(
+                                  color: Colors.orange,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Please enter an OTP of 6 digits",
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   },
                   child: Text(
                     'Sign In',

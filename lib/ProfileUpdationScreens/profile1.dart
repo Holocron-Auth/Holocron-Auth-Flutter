@@ -1724,17 +1724,17 @@ class profileScreen1State extends State<profileScreen1> {
                         File? image = _imageFile;
                         //2,3,4,11
                         if( _formKey2.currentState!.validate() && _formKey3.currentState!.validate() && _formKey4.currentState!.validate() && _formKey11.currentState!.validate()){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    homeScreen1(
-                                      name: widget.name,
-                                      number: widget.number,
-                                      email: email,
-                                      image: image,
-                                    )),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) =>
+                          //           homeScreen1(
+                          //             name: widget.name,
+                          //             number: widget.number,
+                          //             email: email,
+                          //             image: image,
+                          //           )),
+                          // );
                         }
                       },
                       child: Text(

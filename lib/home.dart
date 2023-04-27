@@ -3,20 +3,17 @@ import '../profile.dart';
 import 'dart:io';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../tips.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
+
 
 
 class homeScreen1 extends StatefulWidget {
-  final String name;
-  final String number;
-  final String email;
-  final File? image;
+  final String jwt;
 
   const homeScreen1({
     Key? key,
-    required this.name,
-    required this.number,
-    required this.email,
-    this.image,
+    required this.jwt,
   }) : super(key: key);
   @override
   homeScreen1State createState() => homeScreen1State();
@@ -24,11 +21,24 @@ class homeScreen1 extends StatefulWidget {
 
 class homeScreen1State extends State<homeScreen1> {
   late File _image;
+  late String name;
+  late String number;
+  late String email;
 
   @override
   void initState() {
     super.initState();
-    _image = widget.image ?? File('assets/Change.png');
+    print("Here's the token");
+    Map<String,dynamic> jwtDecoded = JwtDecoder.decode(widget.jwt);
+    print(jwtDecoded);
+    name = jwtDecoded['name'];
+    print(name);
+    number = jwtDecoded['phone'];
+    print(number);
+    email = jwtDecoded['email'];
+    print(email);
+    // _image = jwtDecoded['image']?? File('assets/Change.png');
+    // print(_image);
   }
 
   @override
@@ -63,7 +73,7 @@ class homeScreen1State extends State<homeScreen1> {
                         margin: EdgeInsets.only(
                             top: 0.08 * height, left: 0.01 * width),
                         child: Text(
-                          'Hi, ${widget.name}!',
+                          'Hi, ${name}!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -105,11 +115,11 @@ class homeScreen1State extends State<homeScreen1> {
                     child: GestureDetector(
                       onTap: () {
                         // Navigate to profile screen
-                        File _image = widget.image ?? File('assets/Change.png');
+                        File _image1 = _image ?? File('assets/Change.png');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => profileScreen1(name: widget.name, number: widget.number, email:widget.email, image: _image, onSave: (value) {
+                            builder: (context) => profileScreen1(name: name, number: number, email:email, image: _image1, onSave: (value) {
                               setState(() {
                                 print(value);
                               });
@@ -120,7 +130,7 @@ class homeScreen1State extends State<homeScreen1> {
                       },
                       child: CircleAvatar(
                         radius: 30.0,
-                        backgroundImage: FileImage(_image),
+                        // backgroundImage: FileImage(_image),
                         // child: Icon(
                         //   Icons.person,
                         //   color: Colors.white,

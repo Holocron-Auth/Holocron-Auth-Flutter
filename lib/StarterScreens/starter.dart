@@ -13,10 +13,10 @@ class StarterScreen extends StatelessWidget {
         // color: Colors.black,
         decoration: BoxDecoration(
           color: Colors.black,
-          image: DecorationImage(
-            image: AssetImage('assets/image 9.png'),
-            fit: BoxFit.cover,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage('assets/image 9.png'),
+          //   fit: BoxFit.cover,
+          // ),
         ),
         // Container(
         //   color: Color.fromRGBO(0, 0, 0, 0.5),

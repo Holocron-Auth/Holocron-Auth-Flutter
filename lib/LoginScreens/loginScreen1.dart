@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_number/mobile_number.dart';
+import 'package:flutter_curl/flutter_curl.dart';
+import 'package:http/http.dart' as http;
 
 
 final _formKey = GlobalKey<FormState>();
@@ -21,6 +23,7 @@ class LoginScreen1 extends State<LoginScreenState> {
 
   void initState() {
     super.initState();
+
     _controller = TextEditingController();
     MobileNumber.listenPhonePermission((isPermissionGranted) {
       if (isPermissionGranted) {
@@ -30,6 +33,29 @@ class LoginScreen1 extends State<LoginScreenState> {
 
     initMobileNumberState();
   }
+
+  Future<String> generateOTP(String phone) async {
+    var headers = {
+      'ngrok-skip-browser-warning': '1',
+      'Content-Type': 'application/json',
+    };
+
+    var data = '{"json": {"phone": "$phone"}}';
+
+    var url = Uri.parse('https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.generateOTPWithPhone');
+    var res = await http.post(url, headers: headers, body: data);
+    print(res.body);
+    if (res.statusCode != 200) {
+      // throw Exception('http.post error: statusCode= ${res.statusCode}');
+      return 'Error Moving forward';
+    }
+    else{
+      return 'Success';
+    }
+    print(res.body);
+  }
+
+
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initMobileNumberState() async {
     if (!await MobileNumber.hasPhonePermission) {
@@ -69,45 +95,6 @@ class LoginScreen1 extends State<LoginScreenState> {
               margin: EdgeInsets.only(top: 0.25 * height),
               child: Image.asset('assets/Logo.png'),
             ),
-
-            // Container(
-            //   //textfield form for mobile number
-            //   width: 0.8 * width,
-            //   height: 0.055 * height,
-            //   margin: EdgeInsets.only(top: 0.07 * height),
-            //
-            //   decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(15.0),
-            //       border: Border.all(width: 1, color: Colors.orange),
-            //       color: Colors.black),
-            //   child: TextFormField(
-            //     //required
-            //     validator: (value) {
-            //       if (value == null || value.isEmpty) {
-            //         return 'Please enter your name';
-            //       }
-            //       return null;
-            //     },
-            //
-            //
-            //     controller: _controller,
-            //     decoration: InputDecoration(
-            //       // border: OutlineInputBorder(
-            //       //   borderSide: BorderSide(width: 1, color: Colors.orange),
-            //       //   borderRadius: BorderRadius.circular(15.0),
-            //       // ),
-            //       border: InputBorder.none,
-            //       hintText: 'Mobile Number',
-            //       labelText: 'Mobile Number',
-            //       hintStyle: TextStyle(
-            //           color: Color(0xffFFB267),
-            //           fontSize: 17,
-            //           fontWeight: FontWeight.w500),
-            //       contentPadding:
-            //           EdgeInsets.only(left: 0.05 * width,),
-            //     ),
-            //   ),
-            // ),
 
             Container(
                 decoration: BoxDecoration(
@@ -176,18 +163,7 @@ class LoginScreen1 extends State<LoginScreenState> {
                       tileMode: TileMode.repeated,
                     )),
                 child: ElevatedButton(
-                  // onPressed: () {
-                  //   // Do something when the button is pressed
-                  //   String mobileNumber = _controller.text;
-                  //
-                  //   Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => LoginScreenState2(mobileNumber: mobileNumber)
-                  //       )
-                  //   );
-                  // },
-                  onPressed: (){
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       String mobile = _controller.text;
                       String last10 = _mobileNumber.substring(_mobileNumber.length - 10);
@@ -196,24 +172,54 @@ class LoginScreen1 extends State<LoginScreenState> {
                         print(last10);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content : Column(children:[
 
-                              Text("The phone number that you've entered isn't the same as the you've entered in the field above\n Please enter the phone number registered with your Sim Card "),
 
-                            ]),
+                              content:Text("The phone number that you've entered isn't the same as the you've entered in the field above\n Please enter the phone number registered with your Sim Card "),
+
+
                             duration: Duration(seconds: 2),
 
                           ),
                         );
                       }
+                      // else {
+                      //   _formKey.currentState!.save();
+                      //
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => LoginScreenState2(mobileNumber: last10)
+                      //         )
+                      //     );
+                      // }
                       else {
                         _formKey.currentState!.save();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreenState2(mobileNumber: last10)
-                              )
+                        //uncomment the below line when pushing
+                        String response = await generateOTP(last10);
+                        print(response);
+                        if(response == "error"){
+                          print('In here');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content :
+
+                              Text("Please check your internet connection or try again later"),
+
+                              duration: Duration(seconds: 2),
+
+                            ),
                           );
+                        }
+                        else if(response == "Success"){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    LoginScreenState2(
+                                        mobileNumber: last10
+                                        )),
+                          );
+                        }
                       }
                     }
                   },

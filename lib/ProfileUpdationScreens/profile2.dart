@@ -33,6 +33,7 @@ class profileScreen2 extends StatefulWidget {
   final String name;
   final String number;
   final String email;
+  final String jwt;
   final void Function(String) onSave;
 
   const profileScreen2({
@@ -40,6 +41,7 @@ class profileScreen2 extends StatefulWidget {
     required this.name,
     required this.number,
     required this.email,
+    required this.jwt,
     required this.onSave,
   }) : super(key: key);
   @override
@@ -787,245 +789,6 @@ class profileScreen2State extends State<profileScreen2> {
                       )),
                 ),
                 Container(
-                  margin: EdgeInsets.only(
-                      left: 0.03 * width,
-                      right: 0.03 * width,
-                      top: 0.01 * height,
-                      bottom: 0.01 * height),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      // color: isExpanded ?Colors.orange : Colors.transparent,
-                      color: Colors.orange,
-                      width: 1.0,
-                    ),
-                    //border radius to appear only when expanded
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      // margin: EdgeInsets.only(top: 0.04 * height, left:0.025*width, right: 0.025*width),
-                      child: customExpansionTile(
-                        // borderColor: Colors.transparent,
-                        onExpansionChanged: (bool expanded) {
-                          isExpanded3 = expanded;
-                          print(isExpanded3);
-                          borderColor =
-                          isExpanded3 ? Colors.orange : Colors.transparent;
-                        },
-                        initiallyExpanded: isExpanded3,
-                        // backgroundColor: Color(0xff535252),
-                        backgroundColor: Colors.black,
-                        leading: null,
-                        // trailing: Icon(Icons.arrow_forward_rounded),
-                        trailing: Icon(Icons.keyboard_arrow_down_rounded),
-                        iconColor: Colors.white,
-                        collapsedIconColor: Colors.white,
-                        collapsedBackgroundColor: Color(0xff2B2B2B),
-                        tilePadding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        // backgroundColor: Color(0xff535252),
-                        title: Container(
-                          // color: _isExpanded ? Colors.blue : null,
-                          child: Text(
-                            "Other Information",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        // borderSide: BorderSide(color: Colors.white),
-
-                        children: [
-                          Container(
-                              height: 0.09 * height,
-                              width: 0.87 * width,
-                              decoration: BoxDecoration(
-                                color: Color(0xff2B2B2B),
-                                border: Border.all(
-                                  color: Colors.orange,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Form(
-                                key: _formKey10,
-                                child: SizedBox(
-                                  height: double.infinity,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      DropdownButtonFormField2(
-                                        value: _selectedValue2,
-                                        decoration: InputDecoration(
-                                          fillColor: Color(0xff2B2B2B),
-                                          filled: true,
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.zero,
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(15),
-                                          ),
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          // color: Colors.white,
-                                          // size: 30,
-                                          icon: const Icon(
-                                            Icons.keyboard_arrow_down_rounded,
-                                            color: Colors.orange,
-                                          ),
-                                        ),
-                                        dropdownStyleData:
-                                        const DropdownStyleData(
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(15)),
-                                          ),
-                                        ),
-                                        isExpanded: true,
-                                        hint: const Text(
-                                          "Privacy Control",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.orange),
-                                        ),
-                                        items: privacy
-                                            .map((item) =>
-                                            DropdownMenuItem<String>(
-                                              value: item,
-                                              child: Text(
-                                                item,
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ))
-                                            .toList(),
-                                        onChanged: (value) {
-                                          //Do something when changing the item if you want.
-                                          setState(() {
-                                            _selectedValue2 = value;
-                                          });
-                                        },
-                                        onSaved: (value) {},
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )),
-                          Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xff2B2B2B),
-                                border: Border.all(
-                                  // color: isExpanded ?Colors.orange : Colors.transparent,
-                                  color: Colors.orange,
-                                  width: 1.0,
-                                ),
-                                //border radius to appear only when expanded
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              margin: EdgeInsets.only(
-                                  top: 0.02 * height,
-                                  right: 0.03 * width,
-                                  left: 0.03 * width),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Form(
-                                      key: _formKey8,
-                                      child: TextFormField(
-                                        controller: _controller7,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(10),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(10),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(10),
-                                          ),
-                                          focusedErrorBorder:
-                                          OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(10),
-                                          ),
-                                          errorStyle:
-                                          TextStyle(color: Colors.orange),
-                                          hintText: 'College Name',
-                                          hintStyle:
-                                          TextStyle(color: Colors.orange),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                          Container(
-                              width: 0.87 * width,
-                              height: 0.075 * height,
-                              margin: EdgeInsets.only(
-                                  top: 0.02 * height, bottom: 0.02 * height),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                  gradient: const LinearGradient(
-                                    colors: [Colors.orange, Colors.deepOrange],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    stops: [0.1, 0.9],
-                                    tileMode: TileMode.repeated,
-                                  )),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey8.currentState!.validate()) {
-                                    if (_controller7 != null) {
-                                      print(_controller7.value);
-                                      // print(_controller7);
-                                      String text = _controller7.text;
-                                      if (text.isNotEmpty) {
-                                        print("yes1");
-                                        _formKey8.currentState!.save();
-                                        setState(() {
-                                          _currentProgress += 10;
-                                        });
-                                      }
-                                    }
-                                  }
-                                  if (_formKey10.currentState!.validate()) {
-                                    print(_selectedValue2);
-                                    if (_selectedValue2 == "On" ||
-                                        _selectedValue2 == "Off") {
-                                      print("yes2");
-                                      _formKey10.currentState!.save();
-                                      setState(() {
-                                        _currentProgress += 10;
-                                      });
-                                    } else {
-                                      print("no2");
-                                    }
-                                  }
-                                  _collapseTile(isExpanded3);
-                                },
-                                child: Text(
-                                  'Save and Proceed',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                ),
-                              )),
-                        ],
-                      )),
-                ),
-                Container(
                     width: 0.94 * width,
                     height: 0.075 * height,
                     // color: Color(0xff535252),
@@ -1099,10 +862,11 @@ class profileScreen2State extends State<profileScreen2> {
                             MaterialPageRoute(
                                 builder: (context) =>
                                     homeScreen1(
-                                      name: widget.name,
-                                      number: widget.number,
-                                      email: widget.email,
-                                      image: image,
+                                      // name: widget.name,
+                                      // number: widget.number,
+                                      // email: widget.email,
+                                      // image: image,
+                                      jwt: widget.jwt,
                                     )),
                           );
                         }

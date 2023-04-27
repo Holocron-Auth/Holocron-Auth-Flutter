@@ -9,13 +9,14 @@ class signUpScreen3 extends StatelessWidget {
   final String name;
   final String number;
   final String email;
+  final String jwt;
 
   const signUpScreen3(
       {Key? key,
       required this.name,
       required this.number,
-      required this.email
-      })
+      required this.email,
+      required this.jwt})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,6 @@ class signUpScreen3 extends StatelessWidget {
                     // String initialValue = 'Ritvik Pendyala';
                     // String number = "9502546860";
 
-
                     // String name = widget.name;
                     // String number = widget.number;
                     // String email = widget.email;
@@ -104,6 +104,7 @@ class signUpScreen3 extends StatelessWidget {
                               name: name,
                               number: number,
                               email: email,
+                              jwt: jwt,
                               onSave: (value) {
                                 print(value);
                               })),
