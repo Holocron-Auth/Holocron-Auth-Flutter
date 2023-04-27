@@ -11,6 +11,7 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import '../home.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 //TASK ACTIONS
 //dropdowns and photo uploading left with the logic of completing the gauge and passing name and password from the signup screen1
 
@@ -86,6 +87,8 @@ class profileScreen2State extends State<profileScreen2> {
   String errorMessage = "";
   String? _selectedValue;
   String? _selectedValue2;
+  String? selectedGender = '';
+  String image='';
 
 
   void _collapseTile(isExpanded) {
@@ -150,6 +153,27 @@ class profileScreen2State extends State<profileScreen2> {
     });
   }
 
+
+  Future<String> updateProfile(String jwt, String image, String dob, String? gender, String address, String pincode, String country) async {
+    var headers = {
+      'ngrok-skip-browser-warning': '1',
+      'Content-Type': 'text/plain',
+    };
+
+    var data = '{"json":{"jwt": "$jwt","image":"$image","dateofbirth":"$dob","gender": "$gender","address":"$address","pincode":"$pincode","country":"$country"}}';
+
+  var url = Uri.parse('https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.updateProfile');
+  var res = await http.post(url, headers: headers, body: data);
+  print(res.body);
+
+  if (res.statusCode != 200) {
+    return "error";
+  }
+  else{
+    return "success";
+  }
+  print(res.body);
+}
 
 
 
@@ -581,7 +605,9 @@ class profileScreen2State extends State<profileScreen2> {
                                           }
                                         },
                                         onChanged: (value) {
-                                          //Do something when changing the item if you want.
+                                          setState(() {
+                                            selectedGender = value;
+                                          });
                                         },
                                         onSaved: (value) {},
                                       ),
@@ -757,12 +783,39 @@ class profileScreen2State extends State<profileScreen2> {
                                     tileMode: TileMode.repeated,
                                   )),
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if(_formKey11.currentState!.validate()){
                                     _formKey11.currentState!.save();
-                                    setState(() {
-                                      isExpanded2= false;
-                                    });
+                                    if(selectedGender == ""){
+                                      selectedGender='NA';
+                                    }
+                                    if(_controller4.text == ""){
+                                      _controller4.text = 'NA';
+                                    }
+                                    if(_controller5.text == ""){
+                                      _controller5.text = 'NA';
+                                    }
+                                    if(_controller6.text == ""){
+                                      _controller6.text = 'NA';
+                                    }
+                                    String date = selectedDate.toLocal().toString().split(' ')[0];
+                                    image  = '/default.jpg';
+
+                                    String response = await updateProfile(widget.jwt, image, date, selectedGender, _controller4.text, _controller5.text, _controller6.text);
+                                    if(response == 'success'){
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text('Details Successfully Updated'),
+                                              duration: Duration(seconds: 2),
+                                          ));
+                                    }
+                                    else if(response  == "error"){
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              duration: Duration(seconds: 2),
+                                              content: Text("Due to some unforseen issue your details haven't been saved")));
+
+                                    }
                                   }
 
                                   int count = 0;
