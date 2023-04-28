@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../tips.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-
-
-
+import 'package:local_auth/local_auth.dart';
+import '../ProfileUpdationScreens/profile1.dart';
+import 'package:flutter/services.dart';
 
 class homeScreen1 extends StatefulWidget {
   final String jwt;
@@ -19,17 +19,197 @@ class homeScreen1 extends StatefulWidget {
   homeScreen1State createState() => homeScreen1State();
 }
 
-class homeScreen1State extends State<homeScreen1> {
+class homeScreen1State extends State<homeScreen1> with WidgetsBindingObserver {
   late File _image;
   late String name;
   late String number;
   late String email;
+  final auth = LocalAuthentication();
+  bool _canCheckBiometrics = false;
+  List<BiometricType> _availableBiometrics = [];
+  String _authorized = 'Not Authorized';
+  bool _isAuthenticating = false;
+
+
+  Future<void> _checkBiometrics() async {
+    bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+      print(e);
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+      print(_canCheckBiometrics);
+    });
+  }
+
+  Future<void> _getAvailableBiometrics() async {
+    List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await auth.getAvailableBiometrics();
+    } on PlatformException catch (e) {
+      availableBiometrics = <BiometricType>[];
+      print(e);
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _availableBiometrics = availableBiometrics;
+      print(_availableBiometrics);
+    });
+  }
+
+  // Future<void> _authenticate() async {
+  //   bool authenticated = false;
+  //   try {
+  //     setState(() {
+  //       _isAuthenticating = true;
+  //       _authorized = 'Authenticating';
+  //     });
+  //     authenticated = await auth.authenticate(
+  //       localizedReason: 'Let OS determine authentication method',
+  //       options: const AuthenticationOptions(
+  //         stickyAuth: true,
+  //         sensitiveTransaction: true,
+  //       ),
+  //     );
+  //     setState(() {
+  //       _isAuthenticating = false;
+  //     });
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //     setState(() {
+  //       _isAuthenticating = false;
+  //       _authorized = 'Error - ${e.message}';
+  //     });
+  //     return;
+  //   }
+  //   if (!mounted) {
+  //     return;
+  //   }
+  //
+  //   setState(
+  //           () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+  // }
+
+  // Future<void> _authenticate() async {
+  //   bool authenticated = false;
+  //   try {
+  //     setState(() {
+  //       _isAuthenticating = true;
+  //       _authorized = 'Authenticating';
+  //     });
+  //     authenticated = await auth.authenticate(
+  //       localizedReason: 'Let OS determine authentication method',
+  //       options: const AuthenticationOptions(
+  //         stickyAuth: true,
+  //         sensitiveTransaction: true, // add this line
+  //       ),
+  //     );
+  //     setState(() {
+  //       _isAuthenticating = false;
+  //     });
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //     setState(() {
+  //       _isAuthenticating = false;
+  //       _authorized = 'Error - ${e.message}';
+  //     });
+  //     return;
+  //   }
+  //   if (!mounted) {
+  //     return;
+  //   }
+  //   setState(() => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+  // }
+
+
+  // Future<bool> isAuthorized() async {
+  //   bool authenticated = false;
+  //
+  //   try {
+  //     authenticated = await auth.authenticate(
+  //       localizedReason: 'Let OS determine authentication method',
+  //       options: const AuthenticationOptions(
+  //         stickyAuth: true,
+  //       ),
+  //     );
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //   }
+  //
+  //   return authenticated;
+  // }
+  //
+  // Future<void> _authenticate() async {
+  //   setState(() {
+  //     _isAuthenticating = true;
+  //     _authorized = 'Authenticating';
+  //   });
+  //
+  //   bool authenticated = await isAuthorized();
+  //
+  //   setState(() {
+  //     _isAuthenticating = false;
+  //     _authorized = authenticated ? 'Authorized' : 'Not Authorized';
+  //   });
+  // }
+  Future<void> _authenticate() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticate(
+        localizedReason: 'Let OS determine authentication method',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+        ),
+      );
+      setState(() {
+        _isAuthenticating = false;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Error - ${e.message}';
+      });
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    if (authenticated) {
+      setState(() => _authorized = 'Authorized');
+    } else {
+      SystemNavigator.pop(); // Close the app if authentication is cancelled
+    }
+  }
+
+
 
   @override
   void initState() {
     super.initState();
+
+    _checkBiometrics();
+    _getAvailableBiometrics();
+    //here check if authorsised only then allow the user to go to the home screen
+    WidgetsBinding.instance!.addObserver(this);
+    _authenticate();
     print("Here's the token");
-    Map<String,dynamic> jwtDecoded = JwtDecoder.decode(widget.jwt);
+    Map<String, dynamic> jwtDecoded = JwtDecoder.decode(widget.jwt);
     print(jwtDecoded);
     name = jwtDecoded['name'];
     print(name);
@@ -37,9 +217,33 @@ class homeScreen1State extends State<homeScreen1> {
     print(number);
     email = jwtDecoded['email'];
     print(email);
-    // _image = jwtDecoded['image']?? File('assets/Change.png');
-    // print(_image);
+      // _image = jwtDecoded['image']?? File('assets/Change.png');
+      // print(_image);
+    // if(_authorized == 'Not Authorized'){
+    //   _authenticate();
+    //
+    // }
+    // else if(_authorized == 'Authorized'){
+    //   print(_authorized);
+
+    // }
+
+
+
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _authenticate();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +259,7 @@ class homeScreen1State extends State<homeScreen1> {
     int dashno4 = 12;
     int dashno5 = 20;
     int dashno6 = 32;
-    int _currentProgress=90;
+    int _currentProgress = 90;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -73,7 +277,7 @@ class homeScreen1State extends State<homeScreen1> {
                         margin: EdgeInsets.only(
                             top: 0.08 * height, left: 0.01 * width),
                         child: Text(
-                          'Hi, ${name}!',
+                          'Hi, ${name!}!',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -117,16 +321,11 @@ class homeScreen1State extends State<homeScreen1> {
                         // Navigate to profile screen
                         File _image1 = _image ?? File('assets/Change.png');
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => profileScreen1(name: name, number: number, email:email, image: _image1, onSave: (value) {
-                              setState(() {
-                                print(value);
-                              });
-                            },
-                          ),
-                        )
-                        );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  profileScreen3(jwt: widget.jwt),
+                            ));
                       },
                       child: CircleAvatar(
                         radius: 30.0,
@@ -328,65 +527,65 @@ class homeScreen1State extends State<homeScreen1> {
                               child: Row(children: [
                             Column(children: [
                               Container(
-                                  margin: EdgeInsets.only(
-                                      top: 0.01 * height,
-                                      right: 0.01 * width,
-                                      left: 0.01 * width),
-                                  width: 0.34 * width,
-                                  height: 0.15 * height,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff535252),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        color: Colors.transparent,
-                                        margin: EdgeInsets.only(
-                                            left: 0.01 *width),
-                                        height: 0.15 * MediaQuery.of(context).size.height,
-                                        width: 0.13 * MediaQuery.of(context).size.width,
-                                        child: SfRadialGauge(
-                                          axes: <RadialAxis>[
-                                            RadialAxis(
-                                              startAngle: 360,
-                                              endAngle: 360,
-                                              showLabels: false,
-                                              showTicks: false,
-                                              minimum: 0,
-                                              maximum: 100,
-                                              axisLineStyle: AxisLineStyle(
-                                                color: Color(0xff2B2B2B),
-                                                thickness: 15,
-                                                cornerStyle: CornerStyle.bothFlat,
-                                              ),
-                                              pointers: <GaugePointer>[
-                                                RangePointer(
-                                                  value: _currentProgress.toDouble(),
-                                                  onValueChanged: (value) {
-                                                    setState(() {
-                                                      double _currentProgress1 = value;
-                                                      _currentProgress =
-                                                          _currentProgress1.toInt();
-                                                      // _currentProgress = value;
-                                                    });
-                                                  },
-                                                  cornerStyle: CornerStyle.bothFlat,
-                                                  width: 15,
-                                                  enableAnimation: true,
-                                                  animationType: AnimationType.ease,
-                                                  color: Color(0xffFFB267),
-                                                )
-                                              ],
-
+                                margin: EdgeInsets.only(
+                                    top: 0.01 * height,
+                                    right: 0.01 * width,
+                                    left: 0.01 * width),
+                                width: 0.34 * width,
+                                height: 0.15 * height,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff535252),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                ),
+                                child: Row(children: [
+                                  Container(
+                                    color: Colors.transparent,
+                                    margin: EdgeInsets.only(left: 0.01 * width),
+                                    height: 0.15 *
+                                        MediaQuery.of(context).size.height,
+                                    width: 0.13 *
+                                        MediaQuery.of(context).size.width,
+                                    child: SfRadialGauge(
+                                      axes: <RadialAxis>[
+                                        RadialAxis(
+                                          startAngle: 360,
+                                          endAngle: 360,
+                                          showLabels: false,
+                                          showTicks: false,
+                                          minimum: 0,
+                                          maximum: 100,
+                                          axisLineStyle: AxisLineStyle(
+                                            color: Color(0xff2B2B2B),
+                                            thickness: 15,
+                                            cornerStyle: CornerStyle.bothFlat,
+                                          ),
+                                          pointers: <GaugePointer>[
+                                            RangePointer(
+                                              value:
+                                                  _currentProgress.toDouble(),
+                                              onValueChanged: (value) {
+                                                setState(() {
+                                                  double _currentProgress1 =
+                                                      value;
+                                                  _currentProgress =
+                                                      _currentProgress1.toInt();
+                                                  // _currentProgress = value;
+                                                });
+                                              },
+                                              cornerStyle: CornerStyle.bothFlat,
+                                              width: 15,
+                                              enableAnimation: true,
+                                              animationType: AnimationType.ease,
+                                              color: Color(0xffFFB267),
                                             )
                                           ],
-                                        ),
-                                      ),
-                                      Column(
-                                  children:[
-
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    children: [
                                       Container(
                                           margin: EdgeInsets.only(
                                               left: 0.02 * width,
@@ -410,7 +609,9 @@ class homeScreen1State extends State<homeScreen1> {
                                         ),
                                       ),
                                     ],
-                                  )]),),
+                                  )
+                                ]),
+                              ),
                             ]),
                             Container()
                           ])),
@@ -482,22 +683,22 @@ class homeScreen1State extends State<homeScreen1> {
                       ),
                     ),
 
-          //           if(dashno1!=0)return Container(
-          //   margin: EdgeInsets.only(
-          //     top: 0.02 * height,
-          //     right: 0.01 * width,
-          //     left: 0.01 * width,
-          //
-          //   ),
-          //   child: Text(
-          //     'You have used Holocron to log into $dashno1 Services'
-          //     style: TextStyle(
-          //       color: Colors.white,
-          //       fontSize: 16,
-          //       fontWeight: FontWeight.w400,
-          //     ),
-          //   ),
-          // )
+                    //           if(dashno1!=0)return Container(
+                    //   margin: EdgeInsets.only(
+                    //     top: 0.02 * height,
+                    //     right: 0.01 * width,
+                    //     left: 0.01 * width,
+                    //
+                    //   ),
+                    //   child: Text(
+                    //     'You have used Holocron to log into $dashno1 Services'
+                    //     style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 16,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    // )
 
                     //
                     //
@@ -599,7 +800,6 @@ class homeScreen1State extends State<homeScreen1> {
                       child: TextButton(
                         onPressed: () {
                           // code to execute when the button is pressed
-
                         },
                         child: Text(
                           "View More",
@@ -615,7 +815,8 @@ class homeScreen1State extends State<homeScreen1> {
             Container(
                 width: 0.95 * width,
                 height: 0.55 * height,
-                margin: EdgeInsets.only(top: 0.02 * height, bottom: 0.04*height),
+                margin:
+                    EdgeInsets.only(top: 0.02 * height, bottom: 0.04 * height),
                 decoration: BoxDecoration(
                   color: Color(0xff2E2E2E),
                   borderRadius: BorderRadius.all(Radius.circular(20)),

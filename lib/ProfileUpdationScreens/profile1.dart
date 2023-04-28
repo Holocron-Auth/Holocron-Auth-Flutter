@@ -11,6 +11,13 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import '../home.dart';
 import 'dart:io';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+
+
+
 //TASK ACTIONS
 //dropdowns and photo uploading left with the logic of completing the gauge and passing name and password from the signup screen1
 
@@ -29,24 +36,18 @@ final _formKey10 = GlobalKey<FormState>();
 final _formKey11 = GlobalKey<FormState>();
 DateTime _currentDate = DateTime.now();
 
-class profileScreen1 extends StatefulWidget {
-  final String name;
-  final String number;
-  final String email;
-  final void Function(String) onSave;
+class profileScreen3 extends StatefulWidget {
+  final String jwt;
 
-  const profileScreen1({
+  const profileScreen3({
     Key? key,
-    required this.name,
-    required this.number,
-    required this.email,
-    required this.onSave,
+    required this.jwt,
   }) : super(key: key);
   @override
-  profileScreen1State createState() => profileScreen1State();
+  profileScreen3State createState() => profileScreen3State();
 }
 
-class profileScreen1State extends State<profileScreen1> {
+class profileScreen3State extends State<profileScreen3> {
   final List<String> gender = [
     'Male',
     'Female',
@@ -99,6 +100,36 @@ class profileScreen1State extends State<profileScreen1> {
   Timer? _resendOtpTimer;
   String? _selectedValue;
   String? _selectedValue2;
+  // late String name;
+  // late String email;
+  // late String number;
+  // late String emailverified;
+  // late String dob;
+  // late String gender;
+  // late String address;
+  // late String pincode;
+  // late String country;
+  // late String completedProfile;
+  // late String profileImage;
+
+
+  Future<Map<String, dynamic>> _getData() async {
+    var headers = {
+      'ngrok-skip-browser-warning': '1',
+      'Content-Type': 'text/plain',
+    };
+
+    var data = '{"json": {"jwt": "${widget.jwt}"}}';
+
+    var url =
+    Uri.parse('https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.getAllUserDetails');
+    var res = await http.post(url, headers: headers, body: data);
+    if (res.statusCode != 200)
+      throw Exception('http.post error: statusCode= ${res.statusCode}');
+    return jsonDecode(res.body)['data'];
+  }
+
+
 
 
   void _startResendOtpTimer() {
@@ -184,7 +215,7 @@ class profileScreen1State extends State<profileScreen1> {
           : _formKey3.currentState!.validate();
       if (!_isEditing2) {
         final String text = _controller2.text.trim();
-        widget.onSave(text);
+        // widget.onSave(text);
         _focusNode2.unfocus();
       } else {
         _focusNode2.requestFocus();
@@ -199,7 +230,7 @@ class profileScreen1State extends State<profileScreen1> {
           : _formKey4.currentState!.validate();
       if (!_isEditing3) {
         final String text = _controller3.text.trim();
-        widget.onSave(text);
+        // widget.onSave(text);
         _focusNode3.unfocus();
       } else {
         _focusNode3.requestFocus();
@@ -214,7 +245,7 @@ class profileScreen1State extends State<profileScreen1> {
           : _formKey2.currentState!.validate();
       if (!_isEditing) {
         final String text = _controller.text.trim();
-        widget.onSave(text);
+        // widget.onSave(text);
         _focusNode.unfocus();
       } else {
         _focusNode.requestFocus();
@@ -222,11 +253,24 @@ class profileScreen1State extends State<profileScreen1> {
     });
   }
 
-  void initState() {
+  void initState() async {
     super.initState();
-    _controller = TextEditingController(text: widget.name);
-    _controller2 = TextEditingController(text: widget.number);
-    _controller3 = TextEditingController(text: widget.email);
+    print("Here's the token");
+    Map<String, dynamic> data = await _getData();
+    late String name = data['name'];
+    late String email = data['email'];
+    late String number = data['number'];
+    late String emailverified = data['emailverified'];
+    late String dob = data['dob'];
+    late String gender1 = data['gender'];
+    late String address = data['address'];
+    late String pincode = data['pincode'];
+    late String country = data['country'];
+    late String completedProfile = data['completedProfile'];
+    late String profileImage = data['profileImage'];
+    _controller = TextEditingController(text: name);
+    _controller2 = TextEditingController(text: number);
+    _controller3 = TextEditingController(text: email);
     _controller4 = TextEditingController();
     _controller5 = TextEditingController();
     _controller6 = TextEditingController();
@@ -1718,10 +1762,10 @@ class profileScreen1State extends State<profileScreen1> {
                         )),
                     child: ElevatedButton(
                       onPressed: () {
-                        String name = widget.name;
-                        String number = widget.number;
-                        String email = _controller.text;
-                        File? image = _imageFile;
+                        // String name1 = name;
+                        // String number1 = number;
+                        // String email1 = _controller.text;
+                        // File? image1 = _imageFile;
                         //2,3,4,11
                         if( _formKey2.currentState!.validate() && _formKey3.currentState!.validate() && _formKey4.currentState!.validate() && _formKey11.currentState!.validate()){
                           // Navigator.push(
