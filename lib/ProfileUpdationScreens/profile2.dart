@@ -162,7 +162,7 @@ class profileScreen2State extends State<profileScreen2> {
 
     var data = '{"json":{"jwt": "$jwt","image":"$image","dateofbirth":"$dob","gender": "$gender","address":"$address","pincode":"$pincode","country":"$country"}}';
 
-  var url = Uri.parse('https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.updateProfile');
+  var url = Uri.parse('https://holocron-auth.gjd.one/api/trpc/mobile.updateProfile');
   var res = await http.post(url, headers: headers, body: data);
   print(res.body);
 
@@ -502,40 +502,6 @@ class profileScreen2State extends State<profileScreen2> {
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(
-                                  right: 0.03 * width,
-                                  left: 0.05 * width,
-                                  bottom: 0.02 * height),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      child: CircleAvatar(
-                                        radius: 60,
-                                        backgroundImage: _imageFile != null
-                                            ? FileImage(_imageFile!)
-                                            : null,
-                                        child: _imageFile == null
-                                            ? IconButton(
-                                          icon: Icon(Icons.camera_alt),
-                                          onPressed: _getImageFromGallery,
-                                          iconSize: 30,
-                                        )
-                                            : null,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: IconButton(
-                                        icon: Icon(Icons.edit,
-                                            color: Colors.orange),
-                                        onPressed: () {
-                                          _getImageFromGallery();
-                                          // code to open gallery or camera for selecting a new image
-                                        },
-                                      ),
-                                    )
-                                  ])),
-                          Container(
                               height: 0.09 * height,
                               width: 0.87 * width,
                               decoration: BoxDecoration(
@@ -841,53 +807,6 @@ class profileScreen2State extends State<profileScreen2> {
                         ],
                       )),
                 ),
-                Container(
-                    width: 0.94 * width,
-                    height: 0.075 * height,
-                    // color: Color(0xff535252),
-                    margin: EdgeInsets.only(top: 0.01 * height),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.0),
-                      color: Color(0xff535252),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Do something when the button is pressed
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => settingsScreen()),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            'Settings',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Container(
-                              margin: EdgeInsets.only(left: 0.62 * width),
-                              child: Icon(
-                                Icons.arrow_forward_rounded,
-                                color: Colors.white,
-                              ))
-                          // Icon(icon)
-                        ],
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
-
-                        shadowColor: Colors.transparent,
-                        // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    )),
                 Container(
                     width: 0.93 * width,
                     height: 0.075 * height,

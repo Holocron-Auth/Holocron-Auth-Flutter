@@ -42,7 +42,7 @@ class LoginScreen1 extends State<LoginScreenState> {
 
     var data = '{"json": {"phone": "$phone"}}';
 
-    var url = Uri.parse('https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.generateOTPWithPhone');
+    var url = Uri.parse('https://holocron-auth.gjd.one/api/trpc/mobile.generateOTPWithPhone');
     var res = await http.post(url, headers: headers, body: data);
     print(res.body);
     if (res.statusCode != 200) {
@@ -164,6 +164,8 @@ class LoginScreen1 extends State<LoginScreenState> {
                     )),
                 child: ElevatedButton(
                   onPressed: () async {
+
+                    print(_simCard);
                     if (_formKey.currentState!.validate()) {
                       String mobile = _controller.text;
                       String last10 = _mobileNumber.substring(_mobileNumber.length - 10);
@@ -182,17 +184,8 @@ class LoginScreen1 extends State<LoginScreenState> {
                           ),
                         );
                       }
-                      // else {
-                      //   _formKey.currentState!.save();
-                      //
-                      //     Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => LoginScreenState2(mobileNumber: last10)
-                      //         )
-                      //     );
-                      // }
                       else {
+                        print(_simCard);
                         _formKey.currentState!.save();
                         //uncomment the below line when pushing
                         String response = await generateOTP(last10);
@@ -271,31 +264,6 @@ class LoginScreen1 extends State<LoginScreenState> {
                 )),
               ],
             ),
-
-            // Container(
-            //     width: 0.8*width,
-            //     height: 0.055*height,
-            //     margin: EdgeInsets.only(top: 0.01 * height),
-            //
-            //
-            //     child:ElevatedButton(
-            //
-            //       onPressed: () {
-            //         // Do something when the button is pressed
-            //       },
-            //       child: Text('Sign Up', style: TextStyle(color:Colors.white, fontSize: 17, fontWeight: FontWeight.w400),),
-            //       style: ElevatedButton.styleFrom(
-            //
-            //         primary: Colors.black,
-            //         side: BorderSide(color: Colors.orange, width: 1),
-            //         shadowColor: Colors.transparent,
-            //         // backgroundColor: Color.fromRGBO(255, 255, 255, 0.2),
-            //
-            //         shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(10.0),
-            //         ),
-            //       ),
-            //     )),
           ],
         ),
       ),

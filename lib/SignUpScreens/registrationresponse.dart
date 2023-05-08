@@ -34,7 +34,7 @@ class RegistrationResponse {
     });
 
     var url = Uri.parse(
-        'https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.regUserWithPhone');
+        'https://holocron-auth.gjd.one/api/trpc/mobile.regUserWithPhone');
     var res = await http.post(url, headers: headers, body: data);
     print(res.body);
     print("You've passed me!!!!!!!");

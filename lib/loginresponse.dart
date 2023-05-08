@@ -39,7 +39,7 @@ class LoginResponse {
     var data = '{"json": {"phone": "$phone", "otp": "$otp"}}';
 
     var url = Uri.parse(
-        'https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.loginWithPhone');
+        'https://holocron-auth.gjd.one/api/trpc/mobile.loginWithPhone');
     var res = await http.post(url, headers: headers, body: data);
     if (res.statusCode == 200) {
       final data = jsonDecode(res.body);

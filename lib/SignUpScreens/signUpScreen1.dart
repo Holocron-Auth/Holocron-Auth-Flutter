@@ -63,7 +63,7 @@ class signUpScreen1State extends State<signUpScreen1> {
 
     var data = '{"json": {"phone": "$phone"}}';
 
-    var url = Uri.parse('https://0f38-103-25-231-102.ngrok-free.app/api/trpc/mobile.generateOTPWithPhone');
+    var url = Uri.parse('https://holocron-auth.gjd.one/api/trpc/mobile.generateOTPWithPhone');
     var res = await http.post(url, headers: headers, body: data);
     print(res.body);
     if (res.statusCode != 200) {
@@ -86,6 +86,10 @@ class signUpScreen1State extends State<signUpScreen1> {
     String mobileNumber = '';
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
+      final List<SimCard> simCards = (await MobileNumber.getSimCards)!;
+      final String mobileNumber1 = (await MobileNumber.mobileNumber)!;
+      print(mobileNumber1);
+      print(simCards);
       mobileNumber = (await MobileNumber.mobileNumber)!;
       _simCard = (await MobileNumber.getSimCards)!;
     } on PlatformException catch (e) {
@@ -296,6 +300,7 @@ class signUpScreen1State extends State<signUpScreen1> {
                             )),
                         child: ElevatedButton(
                           onPressed: () async {
+                            print(_simCard);
                             if (_formKey.currentState!.validate() &&
                                 _formKey1.currentState!.validate()) {
 
